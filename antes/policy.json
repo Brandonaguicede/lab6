@@ -1,0 +1,9 @@
+{
+  "gates": {
+    "spec-lint": { "spec_file": "REQUIREMENTS.md", "id_pattern": "REQ-\\d+", "accept_ears": true },
+    "trace-gate": { "spec_file": "REQUIREMENTS.md", "id_pattern": "REQ-\\d+", "test_reqs": "TEST-REQS.yaml" },
+    "redgreen-gate": { "test_command": "npx playwright test tests/e2e/req-011-username-required.spec.js --project=chromium --workers=1", "timeout_seconds": 120 },
+    "test-lock": { "test_glob": ["test/**/*", "tests/**/*"] },
+    "separation-gate": { "manifest": "PROVENANCE.yaml" }
+  }
+}

@@ -1,0 +1,20 @@
+requirements:
+  - id: REQ-011
+    ears: "WHEN a visitor activates Send with an empty or whitespace-only username and a real message THEN the system SHALL NOT add a message to the transcript, SHALL keep the username field empty, and SHALL tell the visitor to write a name."
+    test_intentions:
+      - id: REQ-011-E2E-empty-username
+        level: e2e
+        given: "The username is empty and the message contains real text."
+        when: "The visitor activates Send."
+        then:
+          - "The #messages transcript is unchanged."
+          - "The #nombre field remains empty."
+          - "The #error notice tells the visitor to write a name."
+      - id: REQ-011-E2E-whitespace-username
+        level: e2e
+        given: "The username contains only whitespace and the message contains real text."
+        when: "The visitor activates Send."
+        then:
+          - "The #messages transcript is unchanged."
+          - "The #nombre field is emptied."
+          - "The #error notice tells the visitor to write a name."
