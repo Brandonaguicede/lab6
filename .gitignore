@@ -1,0 +1,4 @@
+antes/node_modules/
+antes/playwright-report/
+antes/test-results/
+.harness/

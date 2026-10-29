@@ -1,74 +1,160 @@
 <!doctype html>
-<html>
+<html lang="es">
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chat Socket.IO UNA</title>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px;}
-      form button { width: 10%; background: rgb(130, 224, 255);  border: none; padding: 10px; }
+      body { font: 16px Helvetica, Arial, sans-serif; padding-bottom: 58px; }
+      form { background: #000; padding: 6px; position: fixed; bottom: 0; width: 100%; display: flex; gap: 6px; }
+      form input { border: 0; padding: 10px; min-width: 0; }
+      form button { background: rgb(130, 224, 255); border: none; padding: 10px 16px; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
+      #messages li { padding: 8px 10px; overflow-wrap: anywhere; }
       #messages li:nth-child(odd) { background: #eee; }
-      #messages { margin-bottom: 40px }
-      #nombre, #m { display: inline-block;}
-      #m {width: 69%; margin-right: 4px;}
-      #nombre {width: 20%}
+      #nombre { width: 20%; }
+      #m { flex: 1; }
+      #error { color: #a40000; min-height: 1.4em; padding: 6px 10px; }
+      .chat-media { display: block; max-width: min(100%, 560px); max-height: 400px; margin-top: 6px; }
+      .chat-player { width: min(100%, 560px); aspect-ratio: 16 / 9; border: 0; margin-top: 6px; }
+      @media (max-width: 550px) { #nombre { width: 30%; } form button { padding: 10px; } }
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <form action="">
-      <input id="nombre" autocomplete="off" placeholder="Username"/>
-      <input id="m" autocomplete="off" placeholder="Escriba un mensaje" /><button>Send</button>
+    <ul id="messages" aria-live="polite"></ul>
+    <p id="error" role="alert" aria-live="assertive"></p>
+    <form id="chat-form">
+      <input id="nombre" autocomplete="off" maxlength="50" placeholder="Username" aria-label="Nombre de usuario" required>
+      <input id="m" autocomplete="off" maxlength="1000" placeholder="Escriba un mensaje" aria-label="Mensaje" required>
+      <button type="submit">Send</button>
     </form>
-    <script src="https://cdn.socket.io/4.7.2/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
+      (function () {
+        var colorHexTxt = '';
+        var socket = io();
+        var form = document.getElementById('chat-form');
+        var messages = document.getElementById('messages');
+        var error = document.getElementById('error');
 
-    var colorHexTxt = "";
-
-    // genera colores aleatorios en hexadeximal
-    function getRandomColor() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
+        function getRandomColor() {
+          var letters = '0123456789ABCDEF';
+          var color = '#';
+          for (var i = 0; i < 6; i += 1) color += letters[Math.floor(Math.random() * 16)];
+          return color;
         }
 
-        return color;
-     }
-
-      $(function () {
-        var socket = io();
-
-        // emite evento al servidor
-        
-        $('form').submit(function(){
-            var nombreTxt = $('#nombre').val() || "Anomimo";
-            var mensajeTxt = $('#m').val();
-
-            if (colorHexTxt == "") {
-                colorHexTxt = getRandomColor();
-            }
-
-            var jsonMsg = { nombre: nombreTxt, mensaje: mensajeTxt, color: colorHexTxt };
-            socket.emit('Evento-Mensaje-Server', JSON.stringify(jsonMsg));
-            $('#m').val('');
+        function isSecureUrl(value) {
+          try {
+            var url = new URL(value);
+            return url.protocol === 'https:' && !url.username && !url.password;
+          } catch (exception) {
             return false;
+          }
+        }
+
+        function getYoutubeEmbedUrl(value) {
+          try {
+            var url = new URL(value);
+            var hostname = url.hostname.toLowerCase();
+            var parts = url.pathname.split('/').filter(Boolean);
+            var isYoutube = hostname === 'youtube.com' || hostname === 'www.youtube.com';
+            var id = hostname === 'youtu.be' && parts.length === 1 ? parts[0] : null;
+            if (isYoutube && url.pathname === '/watch') {
+              id = url.searchParams.get('v');
+            } else if (isYoutube && ['embed', 'shorts', 'v'].includes(parts[0]) && parts.length === 2) {
+              id = parts[1];
+            }
+            return typeof id === 'string' && /^[A-Za-z0-9_-]{11}$/.test(id) ? 'https://www.youtube-nocookie.com/embed/' + id : null;
+          } catch (exception) {
+            return null;
+          }
+        }
+
+        function setLoadStatus(element) {
+          element.addEventListener('load', function () { element.dataset.loaded = 'true'; });
+          element.addEventListener('error', function () {
+            element.replaceWith(document.createTextNode('[No se pudo cargar el recurso multimedia]'));
+          });
+        }
+
+        function addMedia(message, listItem) {
+          var resource;
+          if (message.tipo === 'imagen' && isSecureUrl(message.mensaje)) {
+            resource = document.createElement('img');
+            resource.src = message.mensaje;
+            resource.alt = 'Imagen compartida por ' + message.nombre;
+            resource.loading = 'lazy';
+            resource.className = 'chat-media';
+          } else if (message.tipo === 'youtube') {
+            var embedUrl = getYoutubeEmbedUrl(message.mensaje);
+            if (embedUrl) {
+              resource = document.createElement('iframe');
+              resource.src = embedUrl;
+              resource.title = 'Video de YouTube';
+              resource.className = 'chat-player';
+              resource.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+              resource.referrerPolicy = 'strict-origin-when-cross-origin';
+              resource.sandbox = 'allow-scripts allow-same-origin allow-presentation';
+            }
+          } else if (message.tipo === 'video' && isSecureUrl(message.mensaje)) {
+            resource = document.createElement('video');
+            resource.src = message.mensaje;
+            resource.controls = true;
+            resource.preload = 'metadata';
+            resource.className = 'chat-media';
+          }
+          if (resource) {
+            setLoadStatus(resource);
+            listItem.appendChild(resource);
+          } else {
+            var text = document.createElement('span');
+            text.textContent = message.mensaje;
+            listItem.appendChild(text);
+          }
+        }
+
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          var nombre = document.getElementById('nombre').value.trim();
+          var mensaje = document.getElementById('m').value;
+          if (!nombre || !mensaje.trim()) return;
+          if (!colorHexTxt) colorHexTxt = getRandomColor();
+          error.textContent = '';
+          socket.emit('Evento-Mensaje-Server', JSON.stringify({ nombre: nombre, mensaje: mensaje, color: colorHexTxt }));
+          document.getElementById('m').value = '';
         });
 
-        // ... (resto del código) ...
-
-        socket.on('Evento-Mensaje-Server', function(msg){
-            var msgJson = JSON.parse(msg);
-            var mensajeDisplay = "<b style='color:"+ msgJson.color +"'>" + msgJson.nombre + "</b>: " + msgJson.mensaje;
-            $('#messages').append($('<li>').html(mensajeDisplay));
+        socket.on('Evento-Mensaje-Server', function (rawMessage) {
+          try {
+            var message = JSON.parse(rawMessage);
+            if (!message || typeof message !== 'object') return;
+            var item = document.createElement('li');
+            var author = document.createElement('strong');
+            author.style.color = /^#[0-9a-fA-F]{6}$/.test(message.color) ? message.color : '#333333';
+            author.textContent = message.nombre;
+            item.appendChild(author);
+            item.appendChild(document.createTextNode(': '));
+            if (message.tipo === 'texto') {
+              var text = document.createElement('span');
+              text.textContent = message.mensaje;
+              item.appendChild(text);
+            } else {
+              addMedia(message, item);
+            }
+            messages.appendChild(item);
             window.scrollTo(0, document.body.scrollHeight);
+          } catch (exception) {
+            error.textContent = 'MENSAJE_RECIBIDO_INVALIDO';
+          }
         });
 
-      });
+        socket.on('Evento-Error-Server', function (rawError) {
+          try { error.textContent = JSON.parse(rawError).code || 'MENSAJE_INVALIDO'; }
+          catch (exception) { error.textContent = 'MENSAJE_INVALIDO'; }
+        });
+      }());
     </script>
   </body>
 </html>

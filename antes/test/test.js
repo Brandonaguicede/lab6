@@ -24,15 +24,15 @@ describe('unalib', function(){
 
   describe('funcion is_valid_url_image', function(){
 
-    it('deberia devolver true para http://image.com/image.jpg', function(){
+    it('deberia devolver true para https://image.com/image.jpg', function(){
 
-      assert.equal(val.is_valid_url_image('http://image.com/image.jpg'), true);
+      assert.equal(val.is_valid_url_image('https://image.com/image.jpg'), true);
 
     });
 
-    it('deberia devolver true para http://image.com/image.gif', function(){
+    it('deberia devolver true para https://image.com/image.gif', function(){
 
-      assert.equal(val.is_valid_url_image('http://image.com/image.gif'), true);
+      assert.equal(val.is_valid_url_image('https://image.com/image.gif'), true);
 
     });
     
@@ -40,7 +40,7 @@ describe('unalib', function(){
 
   describe('funcion is_valid_yt_video', function(){
 
-    it('deberia devolver true para http://image.com/image.jpg', function(){
+    it('deberia devolver true para una URL HTTPS válida de YouTube', function(){
 
       assert.equal(val.is_valid_yt_video('https://www.youtube.com/watch?v=qYwlqx-JLok'), true);
 

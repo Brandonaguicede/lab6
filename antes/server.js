@@ -1,29 +1,48 @@
+'use strict';
 
-// npm install para descargar los paquetes...
-
-// libreriuas
+var express = require('express');
+var createHttpServer = require('http').createServer;
+var SocketIOServer = require('socket.io').Server;
 var validation = require('./libs/unalib');
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
 var port = process.env.PORT || 3000;
 
-// root: presentar html
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
+function createServer(options) {
+  options = options || {};
+  var validator = options.validator || validation;
+  var app = express();
+  var http = createHttpServer(app);
+  var io = new SocketIOServer(http);
 
-// escuchar una conexion por socket
-io.on('connection', function(socket){
-  // si se escucha "chat message"
-  socket.on('Evento-Mensaje-Server', function(msg){
-
-    msg =  validation.validateMessage(msg);
-    // volvemos a emitir el mismo mensaje
-    io.emit('Evento-Mensaje-Server', msg);
+  app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
   });
-});
 
-http.listen(port, function(){
-  console.log('listening on *:' + port);
-});
+  io.on('connection', function (socket) {
+    socket.on('Evento-Mensaje-Server', function (rawMessage, acknowledgement) {
+      var result = validator.validarMensaje(rawMessage);
+
+      if (!result.valid) {
+        socket.emit('Evento-Error-Server', JSON.stringify({ code: result.code }));
+        if (typeof acknowledgement === 'function') {
+          acknowledgement({ ok: false, code: result.code });
+        }
+        return;
+      }
+
+      io.emit('Evento-Mensaje-Server', JSON.stringify(result.value));
+      if (typeof acknowledgement === 'function') {
+        acknowledgement({ ok: true });
+      }
+    });
+  });
+
+  return { app: app, http: http, io: io };
+}
+
+if (require.main === module) {
+  createServer().http.listen(port, function () {
+    console.log('listening on *:' + port);
+  });
+}
+
+module.exports = { createServer: createServer };
