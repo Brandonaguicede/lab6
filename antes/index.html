@@ -25,7 +25,7 @@
     <ul id="messages" aria-live="polite"></ul>
     <p id="error" role="alert" aria-live="assertive"></p>
     <form id="chat-form">
-      <input id="nombre" autocomplete="off" maxlength="50" placeholder="Username" aria-label="Nombre de usuario" required>
+      <input id="nombre" autocomplete="off" maxlength="50" placeholder="Username" aria-label="Nombre de usuario">
       <input id="m" autocomplete="off" maxlength="1000" placeholder="Escriba un mensaje" aria-label="Mensaje" required>
       <button type="submit">Send</button>
     </form>
@@ -117,9 +117,15 @@
 
         form.addEventListener('submit', function (event) {
           event.preventDefault();
-          var nombre = document.getElementById('nombre').value.trim();
+          var nameInput = document.getElementById('nombre');
+          var nombre = nameInput.value.trim();
           var mensaje = document.getElementById('m').value;
-          if (!nombre || !mensaje.trim()) return;
+          if (!nombre) {
+            nameInput.value = '';
+            error.textContent = 'Escribe un nombre.';
+            return;
+          }
+          if (!mensaje.trim()) return;
           if (!colorHexTxt) colorHexTxt = getRandomColor();
           error.textContent = '';
           socket.emit('Evento-Mensaje-Server', JSON.stringify({ nombre: nombre, mensaje: mensaje, color: colorHexTxt }));
