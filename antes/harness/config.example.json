@@ -3,6 +3,10 @@
     "command": "",
     "args": []
   },
+  "testLock": {
+    "command": "python",
+    "args": ["${FOFO_ROOT}/scripts/test-lock", "--write", "--changed", "test/**/*", "--changed", "tests/**/*", "--policy", "policy.json", "--context", "."]
+  },
   "author": {
     "command": "",
     "args": []
@@ -12,8 +16,8 @@
     { "command": "npm", "args": ["run", "test:e2e"] }
   ],
   "fofo": {
-    "command": "",
-    "args": []
+    "command": "python",
+    "args": ["harness/fofo_windows_runner.py", "--fofo-root", "${FOFO_ROOT}", "--config", "gates.config", "--changed", "libs/**/*", "--changed", "server.js", "--changed", "index.html", "--changed", "test/**/*", "--changed", "tests/**/*", "--context", "."]
   },
   "pullRequest": {
     "command": "",

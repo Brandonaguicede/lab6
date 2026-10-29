@@ -80,6 +80,16 @@ function commandInvocation(command, args) {
   return { command: command, args: args || [] };
 }
 
+function expandEnvironmentArguments(args) {
+  return (args || []).map(function (argument) {
+    if (typeof argument !== 'string') return argument;
+    return argument.replace(/\$\{([A-Z][A-Z0-9_]*)\}/g, function (match, variable) {
+      if (!process.env[variable]) throw new Error('Falta la variable de entorno requerida: ' + variable);
+      return process.env[variable];
+    });
+  });
+}
+
 function runCommand(label, step, cwd, state, maxRetries) {
   if (!isConfigured(step)) {
     state.status = 'awaiting-configuration';
@@ -92,7 +102,7 @@ function runCommand(label, step, cwd, state, maxRetries) {
     var startedAt = now();
     var output;
     try {
-      var invocation = commandInvocation(step.command, step.args);
+      var invocation = commandInvocation(step.command, expandEnvironmentArguments(step.args));
       output = childProcess.execFileSync(invocation.command, invocation.args, {
         cwd: cwd,
         encoding: 'utf8',
@@ -307,6 +317,7 @@ function main() {
   }
   if (state.status === 'awaiting-judge' || state.waitingFor === 'Judge') {
     if (!runCommand('Judge', config.judge, project, state, args.maxRetries)) return persist(root, state);
+    if (!runCommand('FoFo-test-lock', config.testLock, project, state, args.maxRetries)) return persist(root, state);
     lockTests(project, lockFile);
     state.status = 'awaiting-author';
     state.waitingFor = undefined;

@@ -3,7 +3,7 @@
 ## Política aplicada
 
 - Los mensajes se validan en el servidor mediante validarMensaje antes de retransmitirse por Socket.IO.
-- Nombre y mensaje son obligatorios; los límites son 50 y 1000 caracteres.
+- Nombre y mensaje son obligatorios; los límites son 50 y 280 caracteres. El cliente conserva el texto que supera el límite y solo lo limpia después de que el servidor acepta el envío.
 - Se rechazan etiquetas HTML y URL con esquema peligroso, incluidos javascript: y data:.
 - Solo se clasifican como multimedia URL HTTPS sin credenciales: imágenes con extensión permitida, archivos de vídeo permitidos y rutas estrictas de YouTube.
 - getImageTag y getEmbeddedCode se conservaron como API heredada, pero devuelven URL segura o null; no construyen HTML.

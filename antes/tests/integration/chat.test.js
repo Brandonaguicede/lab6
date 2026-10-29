@@ -89,4 +89,25 @@ describe('integración Socket.IO: chat y una-lib', function () {
     expect(JSON.parse(result)).toEqual({ code: 'MENSAJE_HTML_NO_PERMITIDO' });
     expect(published).toBe(false);
   });
+
+  test.each([
+    ['mensaje vacio', { mensaje: ' \n\t ' }, 'MENSAJE_REQUERIDO'],
+    ['nombre vacio', { nombre: '   ', mensaje: 'Mensaje real' }, 'NOMBRE_REQUERIDO'],
+    ['mensaje de 281 caracteres', { mensaje: 'a'.repeat(281) }, 'MENSAJE_DEMASIADO_LARGO']
+  ])('no publica %s y responde el error de validacion', async function (label, overrides, expectedCode) {
+    var sender = await connect(baseUrl);
+    var observer = await connect(baseUrl);
+    clients.push(sender, observer);
+    var published = false;
+    observer.once('Evento-Mensaje-Server', function () { published = true; });
+    var error = new Promise(function (resolve) { sender.once('Evento-Error-Server', resolve); });
+
+    var acknowledgement = await emitWithAck(sender, payload(overrides));
+    var result = JSON.parse(await error);
+    await new Promise(function (resolve) { setTimeout(resolve, 75); });
+
+    expect(acknowledgement).toEqual({ ok: false, code: expectedCode });
+    expect(result).toEqual({ code: expectedCode });
+    expect(published).toBe(false);
+  });
 });

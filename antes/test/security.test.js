@@ -87,9 +87,15 @@ describe('una-lib: seguridad y multimedia', function () {
     });
 
     it('controla el límite de longitud', function () {
-      assert.equal(val.validarMensaje(rawMessage({ mensaje: 'a'.repeat(1000) })).valid, true);
-      assert.equal(val.validarMensaje(rawMessage({ mensaje: 'a'.repeat(1001) })).code, 'MENSAJE_DEMASIADO_LARGO');
+      assert.equal(val.validarMensaje(rawMessage({ mensaje: 'a'.repeat(279) })).valid, true);
+      assert.equal(val.validarMensaje(rawMessage({ mensaje: 'a'.repeat(280) })).valid, true);
+      assert.equal(val.validarMensaje(rawMessage({ mensaje: 'a'.repeat(281) })).code, 'MENSAJE_DEMASIADO_LARGO');
       assert.equal(val.validarMensaje(rawMessage({ nombre: 'a'.repeat(51) })).code, 'NOMBRE_DEMASIADO_LARGO');
+    });
+
+    it('trata espacios y saltos de linea como nombre o mensaje vacio', function () {
+      assert.equal(val.validarMensaje(rawMessage({ nombre: ' \n\t ' })).code, 'NOMBRE_REQUERIDO');
+      assert.equal(val.validarMensaje(rawMessage({ mensaje: ' \n\t ' })).code, 'MENSAJE_REQUERIDO');
     });
 
     it('rechaza entradas de tipo o formato inesperado', function () {

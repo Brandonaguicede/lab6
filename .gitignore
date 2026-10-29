@@ -1,4 +1,6 @@
 antes/node_modules/
 antes/playwright-report/
 antes/test-results/
+antes/harness/__pycache__/
+antes/vendor/
 .harness/

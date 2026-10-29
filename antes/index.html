@@ -25,8 +25,8 @@
     <ul id="messages" aria-live="polite"></ul>
     <p id="error" role="alert" aria-live="assertive"></p>
     <form id="chat-form">
-      <input id="nombre" autocomplete="off" maxlength="50" placeholder="Username" aria-label="Nombre de usuario" required>
-      <input id="m" autocomplete="off" maxlength="1000" placeholder="Escriba un mensaje" aria-label="Mensaje" required>
+      <input id="nombre" autocomplete="off" maxlength="50" placeholder="Username" aria-label="Nombre de usuario" aria-describedby="error">
+      <input id="m" autocomplete="off" placeholder="Escriba un mensaje" aria-label="Mensaje" aria-describedby="error">
       <button type="submit">Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
@@ -37,6 +37,17 @@
         var form = document.getElementById('chat-form');
         var messages = document.getElementById('messages');
         var error = document.getElementById('error');
+        var nameInput = document.getElementById('nombre');
+        var messageInput = document.getElementById('m');
+        var errorMessages = {
+          NOMBRE_REQUERIDO: 'Escribe un nombre.',
+          MENSAJE_REQUERIDO: 'Escribe un mensaje.',
+          MENSAJE_DEMASIADO_LARGO: 'El mensaje es demasiado largo (máximo 280 caracteres).'
+        };
+
+        function showError(code) {
+          error.textContent = errorMessages[code] || code || 'MENSAJE_INVALIDO';
+        }
 
         function getRandomColor() {
           var letters = '0123456789ABCDEF';
@@ -117,13 +128,31 @@
 
         form.addEventListener('submit', function (event) {
           event.preventDefault();
-          var nombre = document.getElementById('nombre').value.trim();
-          var mensaje = document.getElementById('m').value;
-          if (!nombre || !mensaje.trim()) return;
+          var nombre = nameInput.value.trim();
+          var mensaje = messageInput.value;
+          if (!nombre) {
+            nameInput.value = '';
+            showError('NOMBRE_REQUERIDO');
+            return;
+          }
+          if (!mensaje.trim()) {
+            messageInput.value = '';
+            showError('MENSAJE_REQUERIDO');
+            return;
+          }
+          if (mensaje.trim().length > 280) {
+            showError('MENSAJE_DEMASIADO_LARGO');
+            return;
+          }
           if (!colorHexTxt) colorHexTxt = getRandomColor();
           error.textContent = '';
-          socket.emit('Evento-Mensaje-Server', JSON.stringify({ nombre: nombre, mensaje: mensaje, color: colorHexTxt }));
-          document.getElementById('m').value = '';
+          socket.emit('Evento-Mensaje-Server', JSON.stringify({ nombre: nombre, mensaje: mensaje, color: colorHexTxt }), function (result) {
+            if (!result || !result.ok) {
+              showError(result && result.code);
+              return;
+            }
+            if (messageInput.value === mensaje) messageInput.value = '';
+          });
         });
 
         socket.on('Evento-Mensaje-Server', function (rawMessage) {
@@ -151,8 +180,8 @@
         });
 
         socket.on('Evento-Error-Server', function (rawError) {
-          try { error.textContent = JSON.parse(rawError).code || 'MENSAJE_INVALIDO'; }
-          catch (exception) { error.textContent = 'MENSAJE_INVALIDO'; }
+          try { showError(JSON.parse(rawError).code); }
+          catch (exception) { showError('MENSAJE_INVALIDO'); }
         });
       }());
     </script>
