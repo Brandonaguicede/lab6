@@ -1,66 +1,48 @@
-# Registro de verificación — Laboratorio 5
+# Registro de verificacion - Laboratorio 5
 
-Fecha de ejecución: 28 de octubre de 2026 (America/Costa_Rica).
+Fecha principal de ejecucion: 29 de octubre de 2026 (America/Costa_Rica).
 
-## Evidencia 1 — comportamiento original
+## Evidencia 1 - comportamiento original
 
 En un worktree aislado del commit original, el payload
-`<script>alert('Inyección de script');</script>` produjo el diálogo nativo
-`Inyección de script`. La captura de contexto está en
-`evidence/evidence-1-xss-before.jpg`. El diálogo nativo no puede aparecer en
-una captura de página de Playwright; la observación quedó registrada durante
-la ejecución.
+`<script>alert('Inyeccion de script');</script>` produjo el dialogo nativo
+`Inyeccion de script`. La captura de contexto esta en
+`evidence/evidence-1-xss-before.jpg`. El dialogo nativo no aparece dentro de
+una captura de pagina de Playwright; su aparicion fue observada y registrada
+en la ejecucion aislada.
 
-## Evidencias 2 y 3 — unidad e integración
-
-Comando ejecutado:
-
-```powershell
-npm test
-```
-
-Resultado: Mocha: **18 passing**. Jest/Socket.IO: **1 suite passed, 3 tests
-passed**. La integración utiliza clientes Socket.IO reales, comprueba que el
-servidor llama a `validarMensaje`, verifica imagen y YouTube válidos y confirma
-que un script no se retransmite; sus clientes y servidor se cierran al final.
-
-## Evidencia 4 — navegador real
-
-Comando ejecutado:
-
-```powershell
-npm run test:e2e -- --headed
-```
-
-Resultado: **3 passed** en Chromium: imagen cargada, iframe de YouTube
-restringido cargado y XSS sin diálogo. El reporte HTML de Playwright permanece
-en `playwright-report/` como artefacto generado localmente.
-
-## Especificación, harness y dependencias
-
-| Comando | Resultado |
-| --- | --- |
-| `npx openspec validate secure-una-chat --strict` | `Change 'secure-una-chat' is valid` |
-| `npm run harness -- --requirement "Demostrar aislamiento de ejecuciones" --dry-run` | Genera ID y rama `harness/<id>` con las fases OpenSpec, Judge, lock, Author, FoFo, suites y PR, sin modificar el árbol. |
-| `npm audit --json` | 0 vulnerabilidades (0 crítica, alta, moderada o baja) tras actualizar Express 4.22.3, Socket.IO 4.8.4 y Mocha 10.8.2. |
-| `npx snyk test` | Bloqueado: `SNYK-0005` / HTTP 401 por falta de credenciales. No es un resultado limpio de Snyk. |
-
-## Verificación posterior - REQ-010, REQ-011 y REQ-012
-
-Ejecución integrada del 29 de octubre de 2026:
+## Evidencias 2, 3 y 4 - suites finales
 
 | Comando | Resultado real |
 | --- | --- |
-| `npm test` | Mocha: **19 passing**. Jest/Socket.IO: **1 suite, 6 tests passed**. |
-| `npm run test:e2e` | Chromium: **8 passed** (XSS, imagen, vídeo y REQ-010/011/012). |
-| FoFo `spec-lint`, `trace-gate`, `redgreen-gate`, `intent-gate`, `secret-scan`, `test-lock`, `oversight-integrity`, `separation-gate` | Aprobados individualmente en los tres worktrees aislados. |
+| `npm test` | Mocha: **19 passing**; Jest/Socket.IO: **1 suite, 6 tests passed**. |
+| `npm run test:e2e` | Chromium: **8 passed**: imagen, YouTube restringido, XSS sin dialogo y REQ-010/011/012. |
+| `npx openspec validate secure-una-chat --strict` | `Change 'secure-una-chat' is valid`. |
 
-Los tres Judge escribieron sus pruebas sin modificar código, las pruebas se
-bloquearon con el `test-lock` oficial y el Author implementó después en otro
-contexto. FoFo emitió una única escalación de revisión para `deps-gate`: al
-ejecutarse desde `antes/`, que es un subdirectorio del repositorio Git, el gate
-resolvió `package.json` contra la raíz Git y lo interpretó como nuevo. Las ramas
-REQ-010, REQ-011 y REQ-012 no modifican `package.json` ni `package-lock.json`.
-No se declara FoFo completamente aprobado hasta configurar ese gate con rutas
-relativas a la raíz Git o recibir la revisión del operador.
+La integracion usa clientes Socket.IO reales y verifica la llamada a
+`validarMensaje`, acepta multimedia permitida, rechaza scripts y cierra los
+recursos creados por la prueba. La E2E registra `page.on('dialog')` antes del
+envio XSS, por lo que cualquier alerta inesperada falla el escenario.
 
+## Harness y FoFo
+
+| Comprobacion | Resultado |
+| --- | --- |
+| `npm run harness -- --requirement "Demostrar aislamiento de ejecuciones" --dry-run` | Genera ID y rama `harness/<id>` con fases OpenSpec, Judge, lock, Author, FoFo, suites y PR sin alterar la aplicacion. |
+| Gates FoFo por worktree | `spec-lint`, `trace-gate`, `redgreen-gate`, `intent-gate`, `secret-scan`, `test-lock`, `oversight-integrity` y `separation-gate` aprobados. |
+| `deps-gate` | Escalacion conservada por la ruta anidada `antes/`; no se omite. Vease `FOFO_DEPS_GATE.md`. |
+
+Los tres Judge escribieron pruebas sin cambiar codigo. Se bloquearon con el
+`test-lock` oficial y Author implemento en otro contexto. Cada rama contiene
+solo su requisito al compararse contra `0d33eb9`; `adfe3c1` contiene la
+integracion conjunta validada.
+
+## Snyk y npm audit
+
+| Comando | Resultado final |
+| --- | --- |
+| `npx snyk test` | **0 issues, 0 vulnerable paths** (autenticado). |
+| `npm audit --json` | 0 criticas, 0 altas, 0 medias y 5 bajas de Jest de desarrollo. |
+
+El resultado final de Snyk se logro actualizando Mocha 12 y fijando
+transitivas vulnerables de Express y Socket.IO mediante overrides compatibles.

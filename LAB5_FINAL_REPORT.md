@@ -1,64 +1,72 @@
-# Laboratorio 5 - Reporte final provisional
+# Laboratorio 5 - Reporte final local
 
-## Resultado técnico
+## Resultado tecnico
 
-La integración local validada en `adfe3c1` protege el chat frente a XSS, valida
-las entradas en servidor, construye multimedia segura mediante DOM, y limita los
+La integracion de referencia `adfe3c1` protege UNA Chat frente a XSS, valida
+las entradas en servidor, construye multimedia segura mediante DOM y limita
 mensajes a 280 caracteres. Los avisos de interfaz cumplen REQ-010 (mensaje
-vacío), REQ-011 (nombre requerido) y REQ-012 (mensaje largo).
+vacio), REQ-011 (nombre requerido) y REQ-012 (mensaje largo).
 
 ## Cambios relevantes
 
-- `antes/libs/unalib.js`: clasificación segura HTTPS, rechazo de HTML/protocolos
-  peligrosos y validación de nombre/mensaje/límite.
-- `antes/index.html`: renderizado con DOM seguro, recursos multimedia
-  restringidos y mensajes de validación comprensibles.
-- `antes/test/`, `antes/tests/integration/`, `antes/tests/e2e/`: cobertura
-  unitaria, Socket.IO y navegador real.
-- `antes/harness/`: OpenSpec, aislamiento por worktree, lock de pruebas y
-  adaptador compatible con los gates oficiales de FoFo en Windows.
+- `antes/libs/unalib.js`: clasificacion HTTPS segura, rechazo de HTML y
+  protocolos peligrosos, validacion de nombre/mensaje/limite.
+- `antes/index.html`: renderizado DOM seguro, multimedia restringida y avisos
+  de validacion.
+- `antes/test/`, `antes/tests/integration/`, `antes/tests/e2e/`: pruebas
+  unitarias, Socket.IO y navegador real.
+- `antes/harness/`: OpenSpec, worktrees aislados, bloqueo de pruebas y
+  adaptador Windows para los gates oficiales de FoFo.
+- `antes/package.json` y `antes/package-lock.json`: actualizacion de Mocha y
+  overrides de dependencias vulnerables detectadas por Snyk.
 
-## Verificación reproducible
+## Verificacion reproducible
 
 ```powershell
 cd antes
 npm install
 npm test
 npm run test:e2e
-npm audit --json
 npx openspec validate secure-una-chat --strict
+npx snyk test
+npm audit --json
 ```
 
-Para instalar FoFo:
+Resultados reales del 29 de octubre de 2026: 19 unitarias aprobadas, 6 de
+integracion aprobadas, 8 E2E Chromium aprobadas, OpenSpec valido y Snyk con
+0 incidencias conocidas. `npm audit` no reporta alertas criticas ni altas;
+mantiene cinco bajas transitivas de Jest, no incorporadas a produccion.
 
-```powershell
-.\harness\install-fofo.ps1
-$env:FOFO_ROOT = (Resolve-Path .\.harness\vendor\Agentic-SDLC\plugins\fofo\skills\sdlc)
-```
+## Snyk y FoFo
 
-Después, complete `harness/config.json` con procesos separados de Judge y
-Author y ejecute `npm run harness -- --requirement "..." --config harness/config.json`.
+El primer Snyk autenticado encontro 22 incidencias (1 critica, 13 altas, 5
+medias y 3 bajas) en 25 rutas. La actualizacion de Mocha 12 y los overrides de
+`proxy-addr`, `socket.io-parser`, `ws` y `picomatch` redujeron el escaneo final
+a 0 incidencias. La escalacion `deps-gate` de FoFo no se omite: deriva de que
+el proyecto vive en `antes/` bajo una raiz Git superior. La solucion oficial y
+reproducible esta en `antes/docs/FOFO_DEPS_GATE.md`.
 
-## Estado de seguridad
+## PRs y entrega
 
-`npm audit --json` informa 0 vulnerabilidades. Snyk sigue pendiente de instalar
-y autenticar; por tanto, este reporte no afirma una evaluación Snyk limpia. La
-escalación FoFo de dependencias se conserva y su configuración correcta está en
-`antes/docs/FOFO_DEPS_GATE.md`.
+Existen las ramas locales `lab5/req-010`, `lab5/req-011` y `lab5/req-012`,
+con pruebas independientes, locks y proveniencia. Parten de `0d33eb9`; por
+eso sus PRs deben tener como base una rama remota que apunte a ese commit,
+por ejemplo `lab5/base-security-media`. Asi cada PR contiene exclusivamente
+su requisito. `adfe3c1` es la integracion conjunta ya comprobada.
 
-## Pull Requests y entrega
+No existe remoto Git y `gh` aun no esta instalado/disponible en este entorno.
+No se simularon PRs ni se escribio `repositorio.txt`. Para terminar la entrega
+externa falta ejecutar `gh auth login`, proporcionar la URL real, configurar
+`origin`, publicar las ramas y crear los tres PRs. Tras ello se escribe la URL
+confirmada en `repositorio.txt`.
 
-Las ramas locales `lab5/req-010`, `lab5/req-011` y `lab5/req-012` existen con
-sus pruebas independientes. Su combinación funcional ya fue verificada en
-`adfe3c1`. Al compartir archivos de contrato FoFo y el mismo formulario, sus
-diffs directos entre sí requieren integración coordinada; no se deben fusionar
-en paralelo sin resolver esos artefactos. No hay remoto ni autenticación GitHub,
-así que no existen PR reales ni `repositorio.txt` todavía.
+## Exposicion
 
-## Pendientes que requieren intervención externa
-
-1. Instalar/autenticar GitHub CLI y proporcionar la URL del repositorio.
-2. Instalar/autenticar Snyk y ejecutar el escaneo.
-3. Resolver el resultado de Snyk, repetir las tres suites si cambia una
-   dependencia, publicar las ramas y crear PRs reales.
-4. Escribir la URL confirmada en `repositorio.txt`.
+1. Muestre `adfe3c1` como integracion comprobada y ejecute `npm test` y
+   `npm run test:e2e`.
+2. Demuestre XSS, imagen, video y los avisos REQ-010/011/012.
+3. Abra `antes/docs/FOFO_DEPS_GATE.md` para explicar la separacion Judge /
+   Author, worktrees y la escalacion conservada.
+4. Ejecute `npx snyk test` autenticado para mostrar 0 incidencias.
+5. Cuando exista `origin`, presente los tres PRs apilados sobre
+   `lab5/base-security-media` y la URL en `repositorio.txt`.

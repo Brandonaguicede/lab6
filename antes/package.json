@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "express": "4.22.3",
-    "mocha": "10.8.2",
     "socket.io": "4.8.4"
   },
   "scripts": {
@@ -16,6 +15,15 @@
     "@fission-ai/openspec": "^1.15.0",
     "@playwright/test": "^1.64.1",
     "jest": "^30.5.2",
+    "mocha": "^12.0.3",
     "socket.io-client": "^4.8.4"
+  },
+  "overrides": {
+    "anymatch": {
+      "picomatch": "2.3.2"
+    },
+    "proxy-addr": "2.0.8",
+    "socket.io-parser": "4.2.7",
+    "ws": "8.22.0"
   }
 }
