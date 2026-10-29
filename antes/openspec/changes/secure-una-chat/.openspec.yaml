@@ -1,0 +1,4 @@
+schema: spec-driven
+created: 2026-10-28
+goal: Asegurar UNA Chat y comprobar el flujo con pruebas unitarias, de
+  integración y E2E.

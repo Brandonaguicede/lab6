@@ -1,0 +1,22 @@
+{
+  "judge": {
+    "command": "",
+    "args": []
+  },
+  "author": {
+    "command": "",
+    "args": []
+  },
+  "verification": [
+    { "command": "npm", "args": ["test"] },
+    { "command": "npm", "args": ["run", "test:e2e"] }
+  ],
+  "fofo": {
+    "command": "",
+    "args": []
+  },
+  "pullRequest": {
+    "command": "",
+    "args": []
+  }
+}
