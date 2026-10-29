@@ -1,0 +1,11 @@
+{
+  "algo": "sha256",
+  "files": {
+    "test/req-012-message-length.test.js": "4ba2f45d0339a6e1df7607c65a0f9b8097917825c285dacd6e98e184b4df5a8e",
+    "test/security.test.js": "801a7b9e744cca2e64c4da55fe74011e8cce985ace3f02da90c32e1e2fcb5205",
+    "test/test.js": "9df2639b84cdc62b7af5ba6dd1bf40b40850a1f0a6da92e6cf8c72e3f4fb2e97",
+    "tests/e2e/chat.spec.js": "16079e9a3d9d995c484cf3100e3dc5a09b5e2875236f012bf74591808c78e8fd",
+    "tests/e2e/req-012-message-length.spec.js": "5dc48986ccaaf6382cf1ec872783014ec88c8dc7ce8ab3d7a51000da8e8c7370",
+    "tests/integration/chat.test.js": "d16d63ea3eaed47a7a50582eee799ade2f196c0bd16dc59bc336aefa92d8084d"
+  }
+}

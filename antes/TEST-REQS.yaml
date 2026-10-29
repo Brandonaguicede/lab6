@@ -1,0 +1,20 @@
+requirements:
+  - id: REQ-012
+    ears: >-
+      WHEN a visitor activates Send with a message longer than 280 characters THEN
+      the system SHALL NOT add that message to the transcript, SHALL keep the
+      message text in the field, and SHALL tell the visitor the message is too long.
+    test_intents:
+      - id: REQ-012-UNIT-BOUNDARIES
+        level: unit
+        target: validarMensaje
+        input: "JSON string for { nombre, mensaje, color }"
+        expected_result: "valid is true at 279 and 280 characters. At 281 characters valid is false and code is MENSAJE_DEMASIADO_LARGO."
+      - id: REQ-012-E2E-ACCEPT-BOUNDARIES
+        level: e2e
+        surface: "#nombre, #m, accessible Send button, #messages, #error"
+        expected_result: "Messages of 279 and 280 characters are added to #messages."
+      - id: REQ-012-E2E-REJECT-LONG-MESSAGES
+        level: e2e
+        surface: "#nombre, #m, accessible Send button, #messages, #error"
+        expected_result: "Messages of 281 and 1024 characters stay in #m, do not appear in #messages, and produce a length error in #error."
