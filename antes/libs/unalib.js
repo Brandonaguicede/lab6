@@ -2,7 +2,7 @@
 
 var IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.avif'];
 var VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogv'];
-var MAX_MESSAGE_LENGTH = 1000;
+var MAX_MESSAGE_LENGTH = 280;
 var MAX_NAME_LENGTH = 50;
 var SAFE_COLOR = /^#[0-9a-fA-F]{6}$/;
 var YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
