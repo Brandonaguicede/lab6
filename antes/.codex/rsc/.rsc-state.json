@@ -1,0 +1,239 @@
+{
+  "skills": {
+    "analyze": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\analyze"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\analyze"
+    },
+    "automation-strategy": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\automation-strategy"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\automation-strategy"
+    },
+    "clarify": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\clarify"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\clarify"
+    },
+    "connect-tool": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\connect-tool"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\connect-tool"
+    },
+    "constitution": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\constitution"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\constitution"
+    },
+    "debug": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\debug"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\debug"
+    },
+    "decision-challenge": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\decision-challenge"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\decision-challenge"
+    },
+    "deprecation": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\deprecation"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\deprecation"
+    },
+    "design": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\design"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\design"
+    },
+    "fable-operator": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\fable-operator"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\fable-operator"
+    },
+    "ftd": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\ftd"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\ftd"
+    },
+    "harness": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\harness"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\harness"
+    },
+    "idea-refinement": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\idea-refinement"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\idea-refinement"
+    },
+    "implement": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\implement"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\implement"
+    },
+    "init": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\init"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\init"
+    },
+    "orient": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\orient"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\orient"
+    },
+    "parallel": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\parallel"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\parallel"
+    },
+    "plan": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\plan"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\plan"
+    },
+    "review": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\review"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\review"
+    },
+    "sdd": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\sdd"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\sdd"
+    },
+    "sdd-init": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\sdd-init"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\sdd-init"
+    },
+    "ship": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\ship"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\ship"
+    },
+    "simplify-code": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\simplify-code"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\simplify-code"
+    },
+    "source-grounded-development": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\source-grounded-development"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\source-grounded-development"
+    },
+    "specify": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\specify"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\specify"
+    },
+    "suggest": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\suggest"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\suggest"
+    },
+    "tasks": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\tasks"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\tasks"
+    },
+    "unslop": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\unslop"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\unslop"
+    },
+    "ux": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\ux"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\ux"
+    },
+    "verify": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\verify"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\verify"
+    },
+    "worktrees": {
+      "files": [
+        "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rsc\\worktrees"
+      ],
+      "base": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\skills\\worktrees"
+    }
+  },
+  "agents": [
+    "developer",
+    "finding-verifier",
+    "refuter-correctness",
+    "refuter-security",
+    "refuter-tests"
+  ],
+  "agentCollisions": [],
+  "agentsKept": [],
+  "explicitAgents": [],
+  "memory": {
+    "mode": "full",
+    "reason": "hook-trust-required",
+    "paths": [
+      "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\session-memory-core.mjs",
+      "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\session-memory-adapter.mjs",
+      "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\session-memory.mjs",
+      "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\hooks.json"
+    ]
+  },
+  "update": {
+    "mode": "hook"
+  },
+  "knowledge": {
+    "mode": "wired",
+    "reason": null,
+    "paths": [
+      "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\knowledge-sync.mjs",
+      "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.rsc\\trunk-policy.mjs",
+      "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\hooks.json"
+    ]
+  },
+  "gitPermissions": {
+    "mode": "wired",
+    "path": "C:\\Users\\aguir\\OneDrive\\Documentos\\lab5\\antes\\.codex\\rules\\rsc-git.rules"
+  },
+  "policy": {
+    "baseAgents": true,
+    "alwaysOn": true,
+    "codeHooks": true,
+    "dangerGuard": true,
+    "laneGate": true,
+    "gitmojiGuard": false,
+    "memory": true,
+    "context7": false
+  },
+  "commands": [],
+  "commandCollisions": [],
+  "version": "3.6.0"
+}

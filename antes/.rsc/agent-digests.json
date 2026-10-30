@@ -1,0 +1,7 @@
+{
+  ".codex/agents/developer.toml": "46d9dcde8fbd8c4d7253e4c89a2b3c088b1d525267d7814f7ae7b046f6cecdc4",
+  ".codex/agents/finding-verifier.toml": "e0ecaa11ec1c121d0d5b100d8bc95e88fbf5d9890592ba07e08d8365515b8cd3",
+  ".codex/agents/refuter-correctness.toml": "20b32655bc6ce7d5e4e71d1967dbdfab5a42fdf69de91ff5c6d8565802c79769",
+  ".codex/agents/refuter-security.toml": "69e82090746153be576ca1401ac0cbfc89466a15b15a4dd7ca87a4090bc8f655",
+  ".codex/agents/refuter-tests.toml": "1b1a40a02d6195ce22b131342de4de381a4c12868891a6e1829357b4f20d56e0"
+}

@@ -1,0 +1,6 @@
+# rsc-git-permissions:managed — written by rsc; `rsc git-permissions off` removes it.
+# Commit, push and open a PR without asking; a force-push still asks (the strictest match wins).
+prefix_rule(pattern = ["git", "commit"], decision = "allow", justification = "rsc: close the lane — commit")
+prefix_rule(pattern = ["git", "push"], decision = "allow", justification = "rsc: close the lane — push the branch")
+prefix_rule(pattern = ["gh", "pr", "create"], decision = "allow", justification = "rsc: close the lane — open the PR")
+prefix_rule(pattern = ["git", "push", ["--force", "-f", "--force-with-lease"]], decision = "prompt", justification = "rsc: a force-push rewrites the remote")

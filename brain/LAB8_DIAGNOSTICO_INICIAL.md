@@ -217,3 +217,49 @@ Lab 5.
   exacto despues de conocer sus archivos gestionados. No se acepto por la
   aprobacion general previa, pues esta es mas amplia que el plan inicial
   propuesto y activa worktrees y hooks.
+
+## Instalacion de rsc-harness 2026-10-30
+
+### Estado y alcance aplicado
+
+- Rama de instalacion: `feat/lab8-auth0`. Commit de respaldo conservado:
+  `ecb0888` (`chore(lab8): backup before rsc harness`).
+- El primer plan autorizado fue invalidado de forma segura por rsc despues del
+  commit de respaldo. Se genero y aprobo el plan estable
+  `8e582679db6edf91ef1176849615d452964545f47434e6e7219315e368c6b602`.
+- `npx @ericrisco/rsc@3.6.0 onboard ... --accept-plan <id>` finalizo con
+  `RSC_ONBOARDING_READY`. Se instalaron los 31 skills declarados por la
+  version 3.6.0, cinco agentes de revision, reglas Git para Codex, hooks,
+  memoria local y las rutas previstas exclusivamente bajo `antes/`:
+  `.codex/`, `.rsc/`, `.rsc.json`, `01-TOOLS/`, `02-DOCS/` y `AGENTS.md`.
+- No se modifico codigo de UNA Chat, su autenticacion ni dependencias. No se
+  realizo merge ni publicacion remota.
+
+### Verificacion
+
+- `rsc doctor`: `Harness health: healthy`. El onboarding figura como
+  `pending` solo porque `02-DOCS/wiki/sdd/constitution.md` sigue siendo un
+  borrador; debe ratificarse antes del primer desarrollo SDD, como sera US-01.
+- `rsc agents status`: los cinco agentes instalados estan presentes y sin
+  colisiones. `hookWired: true`; el archivo `.codex/hooks.json` contiene los
+  hooks de memoria, sincronizacion y ciclo de sesion de Codex.
+- `rsc memory status`: modo `full`, estado `ready`. Codex requiere una unica
+  accion manual de confianza mediante `/hooks` para ejecutar los hooks del
+  proyecto; no se puede ni se debe simular esa aprobacion desde el repositorio.
+- `rsc worktrees`: no hay worktrees por limpiar. Su diagnostico de higiene
+  informa `not-a-repo` porque el arnes reside en `antes/` mientras el directorio
+  Git es su padre. La rama `feat/lab8-auth0` ya provee aislamiento para esta
+  sesion. No se reubico el arnes fuera del plan aprobado.
+- Seguridad: no se detectaron archivos `.env` reales ni patrones de secretos.
+  Solo se creo la plantilla `01-TOOLS/_TEMPLATE/.env.example`.
+- Regresion Lab 5 posterior a la instalacion: `npm test` aprobo 19 pruebas
+  unitarias y 6 de integracion; `npm run test:e2e` aprobo 8 escenarios
+  Chromium.
+
+### Decision siguiente
+
+US-01 (Auth0 con Google) se tratara como SDD: primero se ratificara la
+constitucion y se elaboraran especificacion, aclaraciones y plan tecnico sin
+modificar autenticacion ni crear credenciales. La arquitectura candidata se
+mantiene: SPA con PKCE y Universal Login, token de API en el handshake de
+Socket.IO, validacion JWT en el backend y despliegue separado para Socket.IO.
