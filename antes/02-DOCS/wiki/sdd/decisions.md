@@ -8,3 +8,6 @@
 | 2026-10-30 | Keep US-01 artifacts as drafts. | `Lab8.docx`, Auth0 tenant values and formal constitution/spec approval are unavailable. |
 | 2026-10-30 | Ratify constitution v1.0.0. | The repository owner explicitly approved its eight testable principles and Definition of Done before US-01 implementation. |
 | 2026-10-30 | Bind Codex hooks to the nested harness directory. | `RSC_PROJECT_CWD` and the `antes/.rsc` script path make memory resolve correctly without moving the Git repository. |
+| 2026-10-30 | Approve US-01 specification and plan in autopilot. | The repository owner explicitly requested autonomous implementation and supplied the required authentication, testing and deployment scope. |
+| 2026-10-30 | Use the pinned Auth0 SPA browser bundle and a JWT/JWKS backend verifier. | The current frontend has no build step; the browser SDK provides PKCE while the persistent Node service remains the authorization boundary. |
+| 2026-10-30 | Permit deterministic test authentication only under `NODE_ENV=test` plus an explicit test flag. | Automated login/logout and Socket.IO tests need no real tenant or token; production must fail closed. |

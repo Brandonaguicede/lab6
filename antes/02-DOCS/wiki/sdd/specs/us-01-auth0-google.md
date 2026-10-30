@@ -1,12 +1,13 @@
 ---
 type: spec
 title: Spec US 01 Auth0 Google
-description: Draft WHAT and WHY for social sign-in with Google through Auth0.
+description: Approved WHAT and WHY for social sign-in with Google through Auth0.
 tags: [sdd, spec, auth0, google]
 timestamp: 2026-10-30T04:15:00Z
 topic: sdd
 slug: us-01-auth0-google
-status: draft
+status: approved-autopilot
+approved_at: 2026-10-30
 ---
 
 # Spec US 01 Auth0 Google
@@ -34,12 +35,13 @@ does not authenticate the person or let the server verify their identity.
 - A successfully authenticated participant joins the chat with trusted identity.
 - The server refuses an unauthenticated or invalid realtime connection before a
   message can be broadcast.
+- A participant can see their authenticated identity and end their session.
 - Lab 5 validation and safe rendering remain intact for an authenticated user.
 
 ## Non-goals and out of scope
 
 - Creating Auth0 or Google credentials, configuring a tenant, deploying Vercel
-  or persisting tokens in this planning cycle.
+  or persisting tokens in this repository.
 - Other providers, account linking, roles, profiles or chat persistence.
 - Replacing Lab 5 media validation, message limits or error semantics.
 
@@ -52,6 +54,8 @@ Google authentication through Auth0, and expects to chat only while authorized.
 
 - Main: sign-in succeeds, an authorized realtime connection opens, and the chat
   shows a trusted display identity.
+- Main: chat controls stay unavailable until the visitor has an authenticated
+  session.
 - Edge: missing, expired, malformed, wrongly issued or wrongly targeted
   credentials prevent connection and message publication.
 - Error: cancelling sign-in or a rejected handshake leaves the visitor outside
@@ -71,14 +75,29 @@ Google authentication through Auth0, and expects to chat only while authorized.
   then existing Lab 5 validation and safe rendering still apply.
 - Given logout or unusable authenticated state, when the client reconnects,
   then it must authenticate again before publishing.
+- Given an unauthenticated visitor, when they attempt to use chat controls,
+  then no message is sent and a sign-in action is available.
+- Given a successful configured Google sign-in, when the redirect returns to
+  UNA Chat, then the authenticated identity is visible and chat becomes usable.
+- Given a user selects logout, when local authenticated state is cleared, then
+  their socket closes and chat is protected again.
+- Given a token is missing, invalid, expired or addressed to another audience,
+  when a realtime connection is attempted, then it is rejected without a
+  message broadcast or token detail exposed to the browser.
+- Given two authenticated participants, when one sends an allowed message,
+  then the other receives it with a server-derived identity.
+- Given an authenticated participant submits HTML, a disallowed URL, an allowed
+  image or an allowed video, when the message is processed, then the existing
+  Lab 5 XSS and multimedia outcomes remain unchanged.
 
 ## Points to clarify
 
-- **pregunta abierta** — What exact US-01 evidence and acceptance wording does
-  `Lab8.docx` require? The document is absent from this workspace.
-- **suposicion tomada** — Google is the sole social provider. *Base:* the
-  authorized task names Auth0 with Google. *Risk:* a multiple-provider rubric
-  changes UI and test scope.
+- **decision diferida** — Reconcile any rubric wording in `Lab8.docx` when it
+  becomes available. The document is absent from this workspace; the explicit
+  continuation request is the implementation scope until then.
+- **suposicion tomada, validada** — Google is the sole social provider. *Base:*
+  the continuation request explicitly requires Google through Auth0. *Risk:* a
+  multiple-provider rubric changes UI and test scope.
 - **decision diferida** — Final Vercel and Socket.IO domains are deployment
   work, explicitly excluded now.
 - **area no formulable** — Future user profiles, persistence and roles have no
@@ -88,5 +107,9 @@ Google authentication through Auth0, and expects to chat only while authorized.
 
 - 2026-10-30 — The current code has no session, CORS, Auth0 or REST message
   layer. The draft preserves the Socket.IO event boundary.
-- 2026-10-30 — Auth0 implementation and credentials are prohibited in this
-  phase; this document is a planning artifact only.
+- 2026-10-30 — The repository owner authorized autonomous continuation for
+  US-01, with human approval reserved for external credentials and deployment.
+  This spec is approved in autopilot, not by a separate manual review.
+- 2026-10-30 — The clarified contract requires session state, visible trusted
+  identity, logout, protected chat, explicit token rejection cases and Lab 5
+  XSS/media regression coverage.
