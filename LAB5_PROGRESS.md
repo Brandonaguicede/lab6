@@ -36,9 +36,9 @@ criticas ni altas de npm audit y Snyk no reporta vulnerabilidades conocidas.
 
 | Requisito | Rama | Base de PR recomendada | Estado |
 | --- | --- | --- | --- |
-| REQ-010 | `lab5/req-010` | `0d33eb9` (`lab5/base-security-media`) | Solo rechazo/aviso de mensaje vacio, prueba E2E y artefactos FoFo. |
-| REQ-011 | `lab5/req-011` | `0d33eb9` (`lab5/base-security-media`) | Solo nombre obligatorio, prueba E2E y artefactos FoFo. |
-| REQ-012 | `lab5/req-012` | `0d33eb9` (`lab5/base-security-media`) | Solo limite de 280, pruebas unitaria/E2E y artefactos FoFo. |
+| REQ-010 | `lab5/req-010` | `29cc19c` (`lab5/harness-base`) | Solo rechazo/aviso de mensaje vacio, prueba E2E y artefactos FoFo. |
+| REQ-011 | `lab5/req-011` | `29cc19c` (`lab5/harness-base`) | Solo nombre obligatorio, prueba E2E y artefactos FoFo. |
+| REQ-012 | `lab5/req-012` | `29cc19c` (`lab5/harness-base`) | Solo limite de 280, pruebas unitaria/E2E y artefactos FoFo. |
 
 Los tres cambios son funcionalmente compatibles: la integracion ya fue
 verificada en `adfe3c1` con 19 pruebas unitarias, 6 de integracion y 8 E2E.
@@ -66,6 +66,6 @@ honesta documentada en `antes/docs/FOFO_DEPS_GATE.md`; no se desactivo.
   gh auth login
   ```
 
-  Despues del push, cree tres PRs hacia `lab5/base-security-media` o permita
+  Despues del push, cree tres PRs hacia `lab5/harness-base` o permita
   que el agente los cree con GitHub CLI. Los PRs incluyen REQ-010, REQ-011 y
   REQ-012, sus pruebas independientes y su trazabilidad FoFo.

@@ -49,9 +49,9 @@ reproducible esta en `antes/docs/FOFO_DEPS_GATE.md`.
 ## PRs y entrega
 
 Existen las ramas locales `lab5/req-010`, `lab5/req-011` y `lab5/req-012`,
-con pruebas independientes, locks y proveniencia. Parten de `0d33eb9`; por
-eso sus PRs deben tener como base una rama remota que apunte a ese commit,
-por ejemplo `lab5/base-security-media`. Asi cada PR contiene exclusivamente
+con pruebas independientes, locks y proveniencia. Parten de `29cc19c`, que
+incorpora OpenSpec y el harness FoFo; por eso sus PRs deben tener como base
+la rama remota `lab5/harness-base`. Asi cada PR contiene exclusivamente
 su requisito. `adfe3c1` es la integracion conjunta ya comprobada.
 
 El repositorio anterior se conserva sin cambios. `origin` se redirigio al
@@ -74,5 +74,5 @@ gh auth login
 3. Abra `antes/docs/FOFO_DEPS_GATE.md` para explicar la separacion Judge /
    Author, worktrees y la escalacion conservada.
 4. Ejecute `npx snyk test` autenticado para mostrar 0 incidencias.
-5. Presente los tres PRs sobre `lab5/base-security-media` y la URL real en
+5. Presente los tres PRs sobre `lab5/harness-base` y la URL real en
    `repositorio.txt`.
