@@ -26,7 +26,7 @@
     <p id="error" role="alert" aria-live="assertive"></p>
     <form id="chat-form">
       <input id="nombre" autocomplete="off" maxlength="50" placeholder="Username" aria-label="Nombre de usuario" required>
-      <input id="m" autocomplete="off" maxlength="1000" placeholder="Escriba un mensaje" aria-label="Mensaje" required>
+      <input id="m" autocomplete="off" maxlength="1000" placeholder="Escriba un mensaje" aria-label="Mensaje">
       <button type="submit">Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
@@ -119,7 +119,12 @@
           event.preventDefault();
           var nombre = document.getElementById('nombre').value.trim();
           var mensaje = document.getElementById('m').value;
-          if (!nombre || !mensaje.trim()) return;
+          if (!mensaje.trim()) {
+            document.getElementById('m').value = '';
+            error.textContent = 'Escribe un mensaje.';
+            return;
+          }
+          if (!nombre) return;
           if (!colorHexTxt) colorHexTxt = getRandomColor();
           error.textContent = '';
           socket.emit('Evento-Mensaje-Server', JSON.stringify({ nombre: nombre, mensaje: mensaje, color: colorHexTxt }));
