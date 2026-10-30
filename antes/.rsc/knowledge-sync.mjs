@@ -993,7 +993,7 @@ const isRemote = (target, native) => (target === 'cursor' && (native?.is_backgro
 export function hook(target, event, native = {}) {
   try {
     if (isRemote(target, native)) return {};
-    const root = nearestHarness(resolve(native.cwd || process.env.RSC_PROJECT_CWD || process.cwd()));
+    const root = nearestHarness(resolve(process.env.RSC_PROJECT_CWD || native.cwd || process.cwd()));
     if (event === 'request') {
       const said = onRequest(root);
       if (!said) return {};

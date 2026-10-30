@@ -201,7 +201,7 @@ export function hookOutput(target, notice) {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const hook = process.argv[2] === 'hook';
   const target = hook ? String(process.argv[3] || 'agent') : 'agent';
-  const root = (hook ? process.argv[4] : process.argv[2]) || process.cwd();
+  const root = (hook ? process.argv[4] : process.argv[2]) || process.env.RSC_PROJECT_CWD || process.cwd();
   let notice = '';
   try { if (!process.env.RSC_NO_UPDATE_CHECK) notice = (await updateNotice(root)).trim(); } catch { /* fail open */ }
   // Codex has no session-start.mjs: its one SessionStart hook is this one, so the MemSlop offer rides

@@ -140,7 +140,7 @@ export function handleLifecycle({ target, event, native = {}, cwd, settings } = 
     if (isRemote(target, native)) return { output: {}, capture: null, remote: true, degraded: false };
     // Two answers from one path, kept apart on purpose: `project` is where the journal is KEPT (the
     // nearest harness), `here` is where the agent WORKS and therefore who the session is.
-    const here = resolve(cwd || native.cwd || process.env.RSC_PROJECT_CWD || process.cwd());
+    const here = resolve(cwd || process.env.RSC_PROJECT_CWD || native.cwd || process.cwd());
     const project = nearestHarness(here);
     if (!existsSync(project)) throw new Error('project directory unavailable');
     const config = settings || projectSettings(project);
