@@ -6,6 +6,7 @@
   },
   "scripts": {
     "start": "node server.js",
+    "build:frontend": "node scripts/build-frontend.js",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "mocha \"test/**/*.js\"",
     "test:integration": "jest tests/integration --runInBand --env=node",
