@@ -39,6 +39,26 @@ describe('Auth0 runtime configuration', function () {
     assert.deepEqual(config.allowedOrigins, ['https://chat.example.test', 'http://127.0.0.1:3000']);
   });
 
+  it('fails closed when public URLs or allowed origins are malformed', function () {
+    var config = auth0.loadAuthConfig(validEnv({
+      AUTH0_REDIRECT_URI: 'not-a-url',
+      SOCKET_URL: 'javascript:alert(1)',
+      ALLOWED_ORIGINS: ','
+    }));
+
+    assert.equal(config.ready, false);
+    assert.deepEqual(config.allowedOrigins, []);
+    assert.ok(config.missing.includes('AUTH0_REDIRECT_URI'));
+    assert.ok(config.missing.includes('SOCKET_URL'));
+    assert.ok(config.missing.includes('ALLOWED_ORIGINS'));
+  });
+
+  it('enables deterministic test mode only with both explicit flags', function () {
+    assert.equal(auth0.loadAuthConfig({ NODE_ENV: 'test' }).testMode, false);
+    assert.equal(auth0.loadAuthConfig({ AUTH_TEST_MODE: '1' }).testMode, false);
+    assert.equal(auth0.loadAuthConfig({ NODE_ENV: 'test', AUTH_TEST_MODE: '1' }).testMode, true);
+  });
+
   it('exposes only public browser configuration', function () {
     var config = auth0.publicRuntimeConfig(validEnv({ AUTH0_CLIENT_SECRET: 'never-public' }));
 
@@ -63,7 +83,7 @@ describe('Auth0 access-token verifier', function () {
       createRemoteJWKSet: function () { return getKey; },
       jwtVerify: async function (token, key, options) {
         observed = { token: token, key: key, options: options };
-        return { payload: { sub: 'google-oauth2|123', name: 'Ana' } };
+        return { payload: { sub: 'google-oauth2|123', name: 'Ana', exp: 4102444800 } };
       }
     });
 
@@ -90,7 +110,7 @@ describe('Auth0 access-token verifier', function () {
   it('uses the verified subject when no display claim is present', async function () {
     var verifier = auth0.createAuth0Verifier(auth0.loadAuthConfig(validEnv()), {
       createRemoteJWKSet: function () { return function () {}; },
-      jwtVerify: async function () { return { payload: { sub: 'google-oauth2|456' } }; }
+      jwtVerify: async function () { return { payload: { sub: 'google-oauth2|456', exp: 4102444800 } }; }
     });
 
     assert.deepEqual(await verifier('signed-token'), {
@@ -130,5 +150,57 @@ describe('Auth0 access-token verifier', function () {
     await assert.rejects(function () { return verifier(wrongAudience); }, { code: 'TOKEN_INVALID' });
     await assert.rejects(function () { return verifier(wrongIssuer); }, { code: 'TOKEN_INVALID' });
     await assert.rejects(function () { return verifier(wrongAlgorithm); }, { code: 'TOKEN_INVALID' });
+  });
+
+  it('rejects a signed access token that omits its expiration claim', async function () {
+    var jose = await import('jose');
+    var pair = await jose.generateKeyPair('RS256');
+    var config = auth0.loadAuthConfig(validEnv());
+    var verifier = auth0.createAuth0Verifier(config, {
+      createRemoteJWKSet: function () { return pair.publicKey; },
+      jwtVerify: jose.jwtVerify
+    });
+    var tokenWithoutExpiration = await new jose.SignJWT({ sub: 'google-oauth2|789', name: 'Ana' })
+      .setProtectedHeader({ alg: 'RS256' })
+      .setIssuer(config.issuer)
+      .setAudience(config.audience)
+      .setIssuedAt()
+      .sign(pair.privateKey);
+
+    await assert.rejects(function () { return verifier(tokenWithoutExpiration); }, { code: 'TOKEN_INVALID' });
+  });
+
+  it('accepts a valid signed JWT and rejects malformed, bad-signature and missing-subject tokens', async function () {
+    var jose = await import('jose');
+    var pair = await jose.generateKeyPair('RS256');
+    var otherPair = await jose.generateKeyPair('RS256');
+    var config = auth0.loadAuthConfig(validEnv());
+    var verifier = auth0.createAuth0Verifier(config, {
+      createRemoteJWKSet: function () { return pair.publicKey; },
+      jwtVerify: jose.jwtVerify
+    });
+    var now = Math.floor(Date.now() / 1000);
+
+    function signed(payload, key) {
+      return new jose.SignJWT(payload)
+        .setProtectedHeader({ alg: 'RS256' })
+        .setIssuer(config.issuer)
+        .setAudience(config.audience)
+        .setIssuedAt(now)
+        .setExpirationTime(now + 300)
+        .sign(key || pair.privateKey);
+    }
+
+    assert.deepEqual(await verifier(await signed({ sub: 'google-oauth2|valid', name: 'Ana' })), {
+      sub: 'google-oauth2|valid',
+      displayName: 'Ana'
+    });
+    await assert.rejects(function () { return verifier('not-a-jwt'); }, { code: 'TOKEN_INVALID' });
+    await assert.rejects(function () {
+      return signed({ sub: 'google-oauth2|forged' }, otherPair.privateKey).then(verifier);
+    }, { code: 'TOKEN_INVALID' });
+    await assert.rejects(function () { return signed({ name: 'Sin sujeto' }).then(verifier); }, {
+      code: 'TOKEN_SUBJECT_MISSING'
+    });
   });
 });

@@ -99,7 +99,6 @@ describe('integración Socket.IO: chat y una-lib', function () {
 
   test.each([
     ['mensaje vacio', { mensaje: ' \n\t ' }, 'MENSAJE_REQUERIDO'],
-    ['nombre vacio', { nombre: '   ', mensaje: 'Mensaje real' }, 'NOMBRE_REQUERIDO'],
     ['mensaje de 281 caracteres', { mensaje: 'a'.repeat(281) }, 'MENSAJE_DEMASIADO_LARGO']
   ])('no publica %s y responde el error de validacion', async function (label, overrides, expectedCode) {
     var sender = await connect(baseUrl);

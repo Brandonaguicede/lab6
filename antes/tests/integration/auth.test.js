@@ -84,6 +84,18 @@ describe('integracion Socket.IO autenticada', function () {
     expect(error.message).toBe('AUTHENTICATION_REQUIRED');
   });
 
+  test('un cliente rechazado no publica mensajes para un observador autenticado', async function () {
+    var observer = await connect(baseUrl, 'test-token-bruno');
+    clients.push(observer);
+    var published = false;
+    observer.once('Evento-Mensaje-Server', function () { published = true; });
+
+    await rejected(baseUrl, 'invalid-test-token');
+    await new Promise(function (resolve) { setTimeout(resolve, 75); });
+
+    expect(published).toBe(false);
+  });
+
   test('acepta un socket autenticado y sustituye el nombre no confiable', async function () {
     var ana = await connect(baseUrl, 'test-token-ana');
     clients.push(ana);
@@ -92,6 +104,21 @@ describe('integracion Socket.IO autenticada', function () {
     var acknowledgement = await emitWithAck(ana, {
       nombre: 'Mallory',
       mensaje: 'Hola',
+      color: '#123ABC'
+    });
+    var message = JSON.parse(await received);
+
+    expect(acknowledgement).toEqual({ ok: true });
+    expect(message.nombre).toBe('Ana');
+  });
+
+  test('la identidad autenticada no depende de un nombre valido enviado por el navegador', async function () {
+    var ana = await connect(baseUrl, 'test-token-ana');
+    clients.push(ana);
+    var received = new Promise(function (resolve) { ana.once('Evento-Mensaje-Server', resolve); });
+
+    var acknowledgement = await emitWithAck(ana, {
+      mensaje: 'Hola sin nombre del cliente',
       color: '#123ABC'
     });
     var message = JSON.parse(await received);
