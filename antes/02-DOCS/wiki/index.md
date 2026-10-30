@@ -10,3 +10,5 @@
 | US-01 analysis | `02-DOCS/wiki/sdd/analysis/us-01-auth0-google.md` | Pre-implementation consistency gate. |
 | SDD decisions | `02-DOCS/wiki/sdd/decisions.md` | Append-only technical decisions. |
 | US-01 verification | `02-DOCS/wiki/sdd/verifications/us-01-auth0-google-2026-10-30.md` | Local evidence, review verdict and external gaps. |
+| Unified deployment verification | `02-DOCS/wiki/sdd/verifications/us-01-auth0-google-unified-2026-10-30.md` | Evidence for the single Node origin amendment. |
+| Unified deployment review | `02-DOCS/wiki/sdd/reviews/us-01-auth0-google-unified-2026-10-30.md` | Adversarial review of the deployment amendment. |
