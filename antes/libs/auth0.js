@@ -27,8 +27,31 @@ function normalizeDomain(value) {
   }
 }
 
+function isLocalHostname(hostname) {
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+}
+
+function normalizePublicUrl(value, originOnly) {
+  var raw = text(value);
+  if (!raw) return '';
+  try {
+    var url = new URL(raw);
+    var allowedProtocol = url.protocol === 'https:' || (url.protocol === 'http:' && isLocalHostname(url.hostname));
+    if (!allowedProtocol || url.username || url.password || url.search || url.hash) return '';
+    if (originOnly && url.pathname !== '/') return '';
+    return originOnly ? url.origin : raw;
+  } catch (error) {
+    return '';
+  }
+}
+
 function exactOrigins(value) {
-  return text(value).split(',').map(function (origin) { return origin.trim(); }).filter(Boolean);
+  var parts = text(value).split(',').map(function (origin) { return origin.trim(); });
+  var origins = parts.map(function (origin) { return normalizePublicUrl(origin, true); });
+  return {
+    valid: parts.length > 0 && origins.every(Boolean),
+    values: origins.filter(Boolean)
+  };
 }
 
 function authError(code, cause) {
@@ -43,6 +66,12 @@ function loadAuthConfig(env) {
   var missing = REQUIRED_VALUES.filter(function (name) { return !text(env[name]); });
   var domain = normalizeDomain(env.AUTH0_DOMAIN);
   if (text(env.AUTH0_DOMAIN) && !domain && !missing.includes('AUTH0_DOMAIN')) missing.push('AUTH0_DOMAIN');
+  var redirectUri = normalizePublicUrl(env.AUTH0_REDIRECT_URI, false);
+  var socketUrl = normalizePublicUrl(env.SOCKET_URL, true);
+  var origins = exactOrigins(env.ALLOWED_ORIGINS);
+  if (text(env.AUTH0_REDIRECT_URI) && !redirectUri && !missing.includes('AUTH0_REDIRECT_URI')) missing.push('AUTH0_REDIRECT_URI');
+  if (text(env.SOCKET_URL) && !socketUrl && !missing.includes('SOCKET_URL')) missing.push('SOCKET_URL');
+  if (text(env.ALLOWED_ORIGINS) && !origins.valid && !missing.includes('ALLOWED_ORIGINS')) missing.push('ALLOWED_ORIGINS');
   var testMode = env.NODE_ENV === 'test' && env.AUTH_TEST_MODE === '1';
   var issuer = domain ? 'https://' + domain + '/' : '';
 
@@ -52,12 +81,12 @@ function loadAuthConfig(env) {
     domain: domain,
     audience: text(env.AUTH0_AUDIENCE),
     clientId: text(env.AUTH0_CLIENT_ID),
-    redirectUri: text(env.AUTH0_REDIRECT_URI),
-    socketUrl: text(env.SOCKET_URL),
+    redirectUri: redirectUri,
+    socketUrl: socketUrl,
     issuer: issuer,
     jwksUri: issuer ? issuer + '.well-known/jwks.json' : '',
     algorithms: ['RS256'],
-    allowedOrigins: exactOrigins(env.ALLOWED_ORIGINS),
+    allowedOrigins: origins.values,
     displayNameClaim: text(env.AUTH0_DISPLAY_NAME_CLAIM),
     testMode: testMode
   };
@@ -106,6 +135,7 @@ function createAuth0Verifier(config, dependencies) {
         algorithms: config.algorithms
       });
       if (!result.payload || !text(result.payload.sub)) throw authError('TOKEN_SUBJECT_MISSING');
+      if (!Number.isFinite(result.payload.exp)) throw authError('TOKEN_EXPIRATION_MISSING');
       return {
         sub: result.payload.sub,
         displayName: displayName(result.payload, config.displayNameClaim)
@@ -119,9 +149,22 @@ function createAuth0Verifier(config, dependencies) {
   };
 }
 
+function createTestVerifier(config) {
+  return async function verifyTestToken(token) {
+    if (!config || !config.testMode) throw authError('AUTH_CONFIGURATION_REQUIRED');
+    var principals = {
+      'test-token-ana': { sub: 'test|ana', displayName: 'Ana' },
+      'test-token-bruno': { sub: 'test|bruno', displayName: 'Bruno' }
+    };
+    if (!principals[token]) throw authError(token ? 'TOKEN_INVALID' : 'TOKEN_MISSING');
+    return principals[token];
+  };
+}
+
 module.exports = {
   loadAuthConfig: loadAuthConfig,
   publicRuntimeConfig: publicRuntimeConfig,
   createAuth0Verifier: createAuth0Verifier,
+  createTestVerifier: createTestVerifier,
   authError: authError
 };

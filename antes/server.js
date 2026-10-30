@@ -12,7 +12,10 @@ function createServer(options) {
   var validator = options.validator || validation;
   var env = options.env || process.env;
   var authConfig = options.authConfig || auth0.loadAuthConfig(env);
-  var tokenVerifier = options.tokenVerifier || auth0.createAuth0Verifier(authConfig);
+  var tokenVerifier = options.tokenVerifier || (authConfig.testMode
+    ? auth0.createTestVerifier(authConfig)
+    : auth0.createAuth0Verifier(authConfig));
+  var browserConfig = options.publicConfig || auth0.publicRuntimeConfig(env);
   var app = express();
   var http = createHttpServer(app);
   var ioOptions = {};
@@ -29,6 +32,16 @@ function createServer(options) {
 
   app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
+  });
+
+  app.get('/client.js', function (req, res) {
+    res.sendFile(__dirname + '/client.js');
+  });
+
+  app.get('/runtime-config.js', function (req, res) {
+    var serialized = JSON.stringify(browserConfig).replace(/</g, '\\u003c');
+    res.set('Cache-Control', 'no-store');
+    res.type('application/javascript').send('window.UNA_CHAT_CONFIG = ' + serialized + ';\n');
   });
 
   io.use(function (socket, next) {
@@ -48,7 +61,17 @@ function createServer(options) {
 
   io.on('connection', function (socket) {
     socket.on('Evento-Mensaje-Server', function (rawMessage, acknowledgement) {
-      var result = validator.validarMensaje(rawMessage);
+      var messageWithTrustedIdentity = rawMessage;
+      try {
+        var parsedMessage = JSON.parse(rawMessage);
+        if (parsedMessage && !Array.isArray(parsedMessage) && typeof parsedMessage === 'object') {
+          parsedMessage.nombre = socket.data.principal.displayName;
+          messageWithTrustedIdentity = JSON.stringify(parsedMessage);
+        }
+      } catch (error) {
+        // El validador existente conserva el contrato de error para JSON invalido.
+      }
+      var result = validator.validarMensaje(messageWithTrustedIdentity);
 
       if (!result.valid) {
         socket.emit('Evento-Error-Server', JSON.stringify({ code: result.code }));
@@ -58,10 +81,7 @@ function createServer(options) {
         return;
       }
 
-      var trustedMessage = Object.assign({}, result.value, {
-        nombre: socket.data.principal.displayName
-      });
-      io.emit('Evento-Mensaje-Server', JSON.stringify(trustedMessage));
+      io.emit('Evento-Mensaje-Server', JSON.stringify(result.value));
       if (typeof acknowledgement === 'function') {
         acknowledgement({ ok: true });
       }
