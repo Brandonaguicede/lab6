@@ -54,11 +54,19 @@ eso sus PRs deben tener como base una rama remota que apunte a ese commit,
 por ejemplo `lab5/base-security-media`. Asi cada PR contiene exclusivamente
 su requisito. `adfe3c1` es la integracion conjunta ya comprobada.
 
-No existe remoto Git y `gh` aun no esta instalado/disponible en este entorno.
-No se simularon PRs ni se escribio `repositorio.txt`. Para terminar la entrega
-externa falta ejecutar `gh auth login`, proporcionar la URL real, configurar
-`origin`, publicar las ramas y crear los tres PRs. Tras ello se escribe la URL
-confirmada en `repositorio.txt`.
+`origin` fue configurado con `https://github.com/Brandonaguicede/lab5.git` y
+se hizo `fetch` sin publicar. Su rama `main` (`6ffb103`) tiene un historial sin
+ancestro comun con este laboratorio local y otra arquitectura: conserva
+`antes/` como evidencia y usa `despues/` para el codigo corregido. La rama
+local `adfe3c1` modifica `antes/`. No se simulan PRs, no se hace push forzado
+ni se crea `repositorio.txt` hasta elegir la base canonica y reconciliar ambos
+arboles sin perder el trabajo remoto.
+
+Tambien falta que GitHub CLI quede disponible y autenticado mediante:
+
+```powershell
+gh auth login
+```
 
 ## Exposicion
 
@@ -68,5 +76,5 @@ confirmada en `repositorio.txt`.
 3. Abra `antes/docs/FOFO_DEPS_GATE.md` para explicar la separacion Judge /
    Author, worktrees y la escalacion conservada.
 4. Ejecute `npx snyk test` autenticado para mostrar 0 incidencias.
-5. Cuando exista `origin`, presente los tres PRs apilados sobre
-   `lab5/base-security-media` y la URL en `repositorio.txt`.
+5. Tras reconciliar la base canonica, presente los tres PRs y la URL real en
+   `repositorio.txt`.

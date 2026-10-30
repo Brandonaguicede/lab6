@@ -53,16 +53,22 @@ honesta documentada en `antes/docs/FOFO_DEPS_GATE.md`; no se desactivo.
 
 ## Publicacion pendiente de informacion externa
 
-- No existe remoto Git configurado y GitHub CLI aun no esta disponible en el
-  entorno (`gh` no se encontro). Por ello no hay PRs reales ni se creo
-  `repositorio.txt` con una URL inventada.
+- `origin` ya apunta a `https://github.com/Brandonaguicede/lab5.git` y sus
+  referencias se descargaron sin publicar cambios.
+- `origin/main` (`6ffb103`) no comparte ancestro con la integracion local:
+  contiene otra estructura de Parte 1 (`antes/` historico y `despues/`
+  corregido), mientras `adfe3c1` trabaja sobre `antes/`. No se debe hacer un
+  push forzado, ni abrir PRs sin reconcilio, porque se perderian o duplicarian
+  cambios ya publicados.
+- GitHub CLI aun no esta disponible en el entorno (`gh` no se encontro). No
+  hay PRs reales ni se creo `repositorio.txt` con una URL inventada.
 - Cuando termine la instalacion de GitHub CLI, ejecute localmente:
 
   ```powershell
   gh auth login
   ```
 
-  Luego proporcione la URL real del repositorio. El siguiente paso sera
-  `git remote add origin <URL_REAL>`, publicar la base y las tres ramas, crear
-  tres PRs hacia `lab5/base-security-media`, y escribir esa misma URL real en
-  `repositorio.txt`.
+  Antes de publicar, debe decidirse cual arbol es la base canonica: la
+  integracion local `adfe3c1` o el `origin/main` ya publicado. Con esa decision
+  se prepara un merge controlado o ramas nuevas basadas en el remoto, se crean
+  los tres PRs y se escribe la URL real en `repositorio.txt`.
