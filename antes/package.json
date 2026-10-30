@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "express": "4.22.3",
+    "jose": "6.2.14",
     "socket.io": "4.8.4"
   },
   "scripts": {

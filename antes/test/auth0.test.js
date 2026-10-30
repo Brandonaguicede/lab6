@@ -98,4 +98,37 @@ describe('Auth0 access-token verifier', function () {
       displayName: 'google-oauth2|456'
     });
   });
+
+  it('rejects expired, wrong-audience and wrong-algorithm JWT fixtures', async function () {
+    var jose = await import('jose');
+    var pair = await jose.generateKeyPair('RS256');
+    var config = auth0.loadAuthConfig(validEnv());
+    var verifier = auth0.createAuth0Verifier(config, {
+      createRemoteJWKSet: function () { return pair.publicKey; },
+      jwtVerify: jose.jwtVerify
+    });
+    var now = Math.floor(Date.now() / 1000);
+
+    async function sign(overrides) {
+      overrides = overrides || {};
+      return new jose.SignJWT({ sub: 'google-oauth2|789', name: 'Ana' })
+        .setProtectedHeader({ alg: overrides.algorithm || 'RS256' })
+        .setIssuer(overrides.issuer || config.issuer)
+        .setAudience(overrides.audience || config.audience)
+        .setIssuedAt(now - 60)
+        .setExpirationTime(overrides.expiration || now + 300)
+        .sign(overrides.key || pair.privateKey);
+    }
+
+    var expired = await sign({ expiration: now - 1 });
+    var wrongAudience = await sign({ audience: 'https://other-api.example.test' });
+    var wrongIssuer = await sign({ issuer: 'https://other.example.test/' });
+    var secret = new TextEncoder().encode('01234567890123456789012345678901');
+    var wrongAlgorithm = await sign({ algorithm: 'HS256', key: secret });
+
+    await assert.rejects(function () { return verifier(expired); }, { code: 'TOKEN_INVALID' });
+    await assert.rejects(function () { return verifier(wrongAudience); }, { code: 'TOKEN_INVALID' });
+    await assert.rejects(function () { return verifier(wrongIssuer); }, { code: 'TOKEN_INVALID' });
+    await assert.rejects(function () { return verifier(wrongAlgorithm); }, { code: 'TOKEN_INVALID' });
+  });
 });
