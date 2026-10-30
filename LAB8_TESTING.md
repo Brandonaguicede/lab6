@@ -35,4 +35,3 @@ npm audit --omit=dev --audit-level=high
 - XSS, URL no permitida, imagen, video y límites del Laboratorio 5.
 
 Las pruebas interceptan el SDK de Auth0. Demuestran el contrato del cliente, no un login real con Google.
-

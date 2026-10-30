@@ -37,4 +37,3 @@ Actualizado: 2026-10-30
 3. Activar la conexión social Google y registrar callbacks, logout y web origins.
 4. Autorizar y ejecutar el despliegue de Vercel y del backend persistente.
 5. Ejecutar el smoke test manual con una cuenta Google real.
-

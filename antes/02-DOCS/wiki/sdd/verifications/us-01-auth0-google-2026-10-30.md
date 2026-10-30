@@ -52,4 +52,3 @@ Seguridad, corrección y pruebas devolvieron APPROVE después de corregir logout
 ## Verdict: FAIL externo
 
 La implementación local pasa. El gate global falla hasta observar Auth0/Google reales y el despliegue autorizado.
-

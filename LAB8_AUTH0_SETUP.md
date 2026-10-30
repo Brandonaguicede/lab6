@@ -57,4 +57,3 @@ AUTH_TEST_MODE=0
 5. Confirme que consola, red y logs no muestran access tokens.
 
 Este smoke test no se ejecutó porque el workspace no contiene credenciales externas.
-

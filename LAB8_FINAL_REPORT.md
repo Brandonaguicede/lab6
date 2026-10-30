@@ -51,4 +51,3 @@ US-01 está implementada, probada y revisada localmente. El laboratorio no se de
 4. Mostrar rechazo sin token e identidad derivada del principal.
 5. Ejecutar el build Vercel y revisar los tres archivos de `dist`.
 6. Con credenciales reales, iniciar sesión con Google, enviar y cerrar sesión.
-

@@ -32,4 +32,3 @@ Configure `PORT` y las mismas variables. Use el dominio del frontend como redire
 - Antes de escalar a varias instancias, agregue pub/sub porque el broadcast sigue en memoria.
 
 El build local está verificado. No se publicó producción porque faltan credenciales, dominios y autorización explícita.
-
