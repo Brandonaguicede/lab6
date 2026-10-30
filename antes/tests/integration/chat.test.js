@@ -97,6 +97,19 @@ describe('integración Socket.IO: chat y una-lib', function () {
     expect(published).toBe(false);
   });
 
+  test('sustituye un nombre vacio del navegador por la identidad autenticada', async function () {
+    var sender = await connect(baseUrl);
+    clients.push(sender);
+    var received = new Promise(function (resolve) { sender.once('Evento-Mensaje-Server', resolve); });
+
+    var acknowledgement = await emitWithAck(sender, payload({ nombre: '   ', mensaje: 'Mensaje real' }));
+    var message = JSON.parse(await received);
+
+    expect(acknowledgement).toEqual({ ok: true });
+    expect(message.nombre).toBe('Ana');
+    expect(message.mensaje).toBe('Mensaje real');
+  });
+
   test.each([
     ['mensaje vacio', { mensaje: ' \n\t ' }, 'MENSAJE_REQUERIDO'],
     ['mensaje de 281 caracteres', { mensaje: 'a'.repeat(281) }, 'MENSAJE_DEMASIADO_LARGO']
