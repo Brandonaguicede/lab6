@@ -25,3 +25,10 @@ slug: us-01-auth0-google
 - files: `libs/auth0.js`, `test/auth0.test.js`, `package.json`, `package-lock.json`
 - decision: pin `jose@6.2.14`; dynamically import its ESM API from the existing CommonJS application and inject JWT/JWKS primitives in tests.
 - blocker: none
+
+## T003 — 2026-10-30
+- status: red
+- red: `npm run test:integration -- --forceExit` produced 4 expected failures: missing and invalid tokens connected, and two broadcasts retained untrusted payload names. The 6 Lab 5 integration tests passed.
+- files: `tests/integration/auth.test.js`, `tests/integration/chat.test.js`
+- decision: inject the token verifier into `createServer` so integration tests never contact Auth0.
+- blocker: none

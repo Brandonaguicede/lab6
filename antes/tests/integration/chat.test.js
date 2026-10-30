@@ -6,9 +6,13 @@ function payload(overrides) {
   return JSON.stringify(Object.assign({ nombre: 'Ana', mensaje: 'Hola', color: '#123ABC' }, overrides));
 }
 
-function connect(url) {
+function connect(url, token) {
   return new Promise(function (resolve, reject) {
-    var socket = createClient(url, { transports: ['websocket'], forceNew: true });
+    var socket = createClient(url, {
+      transports: ['websocket'],
+      forceNew: true,
+      auth: { token: token || 'test-token-ana' }
+    });
     socket.once('connect', function () { resolve(socket); });
     socket.once('connect_error', reject);
   });
@@ -26,10 +30,13 @@ describe('integración Socket.IO: chat y una-lib', function () {
 
   beforeAll(function (done) {
     validationCalls = 0;
-    service = createServer({ validator: { validarMensaje: function (message) {
-      validationCalls += 1;
-      return unaLib.validarMensaje(message);
-    } } });
+    service = createServer({
+      tokenVerifier: async function () { return { sub: 'test|ana', displayName: 'Ana' }; },
+      validator: { validarMensaje: function (message) {
+        validationCalls += 1;
+        return unaLib.validarMensaje(message);
+      } }
+    });
     service.http.listen(0, '127.0.0.1', function () {
       baseUrl = 'http://127.0.0.1:' + service.http.address().port;
       clients = [];
