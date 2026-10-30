@@ -5,15 +5,20 @@ const TEST_YOUTUBE = 'https://www.youtube.com/watch?v=qYwlqx-JLok';
 const PNG_1X1 = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScL2JwAAAABJRU5ErkJggg==', 'base64');
 
 async function send(page, text) {
-  await page.locator('#nombre').fill('Ana');
   await page.locator('#m').fill(text);
-  await page.getByRole('button', { name: 'Send' }).click();
+  await page.getByRole('button', { name: 'Enviar' }).click();
+}
+
+async function signIn(page) {
+  await page.getByRole('button', { name: 'Iniciar sesion con Google' }).click();
+  await expect(page.locator('#identity')).toContainText('Ana');
 }
 
 test.beforeEach(async ({ page }) => {
   await page.route(TEST_IMAGE, async route => route.fulfill({ contentType: 'image/png', body: PNG_1X1 }));
   await page.route('https://www.youtube-nocookie.com/**', async route => route.fulfill({ contentType: 'text/html', body: '<title>Vídeo de prueba</title>' }));
   await page.goto('/');
+  await signIn(page);
 });
 
 test('E2E: una URL válida de imagen aparece y termina de cargar', async ({ page }) => {

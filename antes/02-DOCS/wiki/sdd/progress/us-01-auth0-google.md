@@ -41,3 +41,10 @@ slug: us-01-auth0-google
 - files: `server.js`
 - decision: reject every verifier failure with the same `AUTHENTICATION_REQUIRED` message and keep claim details server-side.
 - blocker: none
+
+## T005 — 2026-10-30
+- status: red
+- red: escalated `npm run test:e2e` failed the three new authentication scenarios because login, identity, logout and protected chat UI do not exist. The run was stopped after those expected failures to avoid waiting for duplicate 30-second locator timeouts in dependent Lab 5 scenarios.
+- files: `tests/e2e/auth.spec.js`, `tests/e2e/chat.spec.js`, `tests/e2e/message-validation.spec.js`, `playwright.config.js`
+- decision: E2E uses test authentication only under `NODE_ENV=test` plus `AUTH_TEST_MODE=1`; production cannot activate this path accidentally.
+- blocker: none
