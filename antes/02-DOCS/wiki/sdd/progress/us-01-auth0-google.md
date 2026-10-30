@@ -32,3 +32,12 @@ slug: us-01-auth0-google
 - files: `tests/integration/auth.test.js`, `tests/integration/chat.test.js`
 - decision: inject the token verifier into `createServer` so integration tests never contact Auth0.
 - blocker: none
+
+## T004 — 2026-10-30
+- status: complete
+- red: T003 produced 4 expected integration failures while all 6 Lab 5 integration tests passed.
+- green: `npm test` passed 26 unit and 10 integration tests.
+- triangulation: authenticated two-user broadcast proves the principal survives the handshake and replaces two different untrusted names.
+- files: `server.js`
+- decision: reject every verifier failure with the same `AUTHENTICATION_REQUIRED` message and keep claim details server-side.
+- blocker: none
