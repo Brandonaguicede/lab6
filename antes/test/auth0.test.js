@@ -8,9 +8,7 @@ function validEnv(overrides) {
     AUTH0_DOMAIN: 'tenant.example.auth0.com',
     AUTH0_AUDIENCE: 'https://api.example.test',
     AUTH0_CLIENT_ID: 'public-client-id',
-    AUTH0_REDIRECT_URI: 'https://chat.example.test',
-    SOCKET_URL: 'https://socket.example.test',
-    ALLOWED_ORIGINS: 'https://chat.example.test,http://127.0.0.1:3000'
+    APP_URL: 'https://chat.example.test'
   }, overrides);
 }
 
@@ -23,9 +21,7 @@ describe('Auth0 runtime configuration', function () {
       'AUTH0_DOMAIN',
       'AUTH0_AUDIENCE',
       'AUTH0_CLIENT_ID',
-      'AUTH0_REDIRECT_URI',
-      'SOCKET_URL',
-      'ALLOWED_ORIGINS'
+      'APP_URL'
     ]);
   });
 
@@ -36,30 +32,28 @@ describe('Auth0 runtime configuration', function () {
     assert.equal(config.issuer, 'https://tenant.example.auth0.com/');
     assert.equal(config.jwksUri, 'https://tenant.example.auth0.com/.well-known/jwks.json');
     assert.deepEqual(config.algorithms, ['RS256']);
-    assert.deepEqual(config.allowedOrigins, ['https://chat.example.test', 'http://127.0.0.1:3000']);
+    assert.equal(config.redirectUri, 'https://chat.example.test');
+    assert.equal(config.socketUrl, 'https://chat.example.test');
+    assert.deepEqual(config.allowedOrigins, ['https://chat.example.test']);
   });
 
   it('fails closed when public URLs or allowed origins are malformed', function () {
     var config = auth0.loadAuthConfig(validEnv({
-      AUTH0_REDIRECT_URI: 'not-a-url',
-      SOCKET_URL: 'javascript:alert(1)',
-      ALLOWED_ORIGINS: ','
+      APP_URL: 'javascript:alert(1)'
     }));
 
     assert.equal(config.ready, false);
     assert.deepEqual(config.allowedOrigins, []);
-    assert.ok(config.missing.includes('AUTH0_REDIRECT_URI'));
-    assert.ok(config.missing.includes('SOCKET_URL'));
-    assert.ok(config.missing.includes('ALLOWED_ORIGINS'));
+    assert.ok(config.missing.includes('APP_URL'));
   });
 
   it('rejects callback paths that the static SPA does not serve', function () {
     var config = auth0.loadAuthConfig(validEnv({
-      AUTH0_REDIRECT_URI: 'https://chat.example.test/callback'
+      APP_URL: 'https://chat.example.test/callback'
     }));
 
     assert.equal(config.ready, false);
-    assert.ok(config.missing.includes('AUTH0_REDIRECT_URI'));
+    assert.ok(config.missing.includes('APP_URL'));
   });
 
   it('enables deterministic test mode only with both explicit flags', function () {
@@ -77,7 +71,7 @@ describe('Auth0 runtime configuration', function () {
       auth0ClientId: 'public-client-id',
       auth0Audience: 'https://api.example.test',
       auth0RedirectUri: 'https://chat.example.test',
-      socketUrl: 'https://socket.example.test',
+      socketUrl: 'https://chat.example.test',
       testMode: false
     });
     assert.equal(JSON.stringify(config).includes('never-public'), false);

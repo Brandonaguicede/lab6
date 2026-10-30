@@ -4,8 +4,6 @@ antes/test-results/
 antes/harness/__pycache__/
 antes/vendor/
 .harness/
-antes/dist/
-antes/.vercel/
 antes/.rsc/memory/
 .env
 .env.*

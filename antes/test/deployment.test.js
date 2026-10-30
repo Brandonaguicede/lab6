@@ -1,53 +1,33 @@
 'use strict';
 
 var assert = require('assert');
-var fs = require('fs');
-var os = require('os');
-var path = require('path');
-var buildFrontend = require('../scripts/build-frontend').buildFrontend;
+var auth0 = require('../libs/auth0');
 
 function deploymentEnv(overrides) {
   return Object.assign({
     AUTH0_DOMAIN: 'tenant.example.auth0.com',
     AUTH0_AUDIENCE: 'https://api.example.test',
     AUTH0_CLIENT_ID: 'public-client-id',
-    AUTH0_REDIRECT_URI: 'https://chat.example.test',
-    SOCKET_URL: 'https://socket.example.test',
-    ALLOWED_ORIGINS: 'https://chat.example.test',
+    APP_URL: 'https://chat.example.test',
     AUTH0_CLIENT_SECRET: 'secret-sentinel-must-not-ship'
   }, overrides);
 }
 
-describe('Vercel static frontend build', function () {
-  var outputDirectory;
+describe('unified Node deployment configuration', function () {
+  it('derives browser, Socket.IO and CORS origins from APP_URL', function () {
+    var internal = auth0.loadAuthConfig(deploymentEnv());
+    var runtime = auth0.publicRuntimeConfig(deploymentEnv());
 
-  beforeEach(function () {
-    outputDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'una-chat-build-'));
+    assert.equal(internal.redirectUri, 'https://chat.example.test');
+    assert.equal(internal.socketUrl, 'https://chat.example.test');
+    assert.deepEqual(internal.allowedOrigins, ['https://chat.example.test']);
+    assert.equal(runtime.auth0RedirectUri, 'https://chat.example.test');
+    assert.equal(runtime.socketUrl, 'https://chat.example.test');
+    assert.equal(JSON.stringify(runtime).includes('secret-sentinel-must-not-ship'), false);
   });
 
-  afterEach(function () {
-    fs.rmSync(outputDirectory, { recursive: true, force: true });
-  });
-
-  it('emits only static browser assets and public runtime values', function () {
-    buildFrontend({ env: deploymentEnv(), outputDirectory: outputDirectory });
-
-    assert.deepEqual(fs.readdirSync(outputDirectory).sort(), ['client.js', 'index.html', 'runtime-config.js']);
-    var runtime = fs.readFileSync(path.join(outputDirectory, 'runtime-config.js'), 'utf8');
-    assert.match(runtime, /tenant\.example\.auth0\.com/);
-    assert.match(runtime, /https:\/\/socket\.example\.test/);
-    assert.equal(runtime.includes('secret-sentinel-must-not-ship'), false);
-  });
-
-  it('refuses incomplete or test-mode production builds', function () {
-    assert.throws(function () {
-      buildFrontend({ env: {}, outputDirectory: outputDirectory });
-    }, /AUTH_CONFIGURATION_REQUIRED/);
-    assert.throws(function () {
-      buildFrontend({
-        env: deploymentEnv({ NODE_ENV: 'test', AUTH_TEST_MODE: '1' }),
-        outputDirectory: outputDirectory
-      });
-    }, /AUTH_TEST_MODE_FORBIDDEN/);
+  it('accepts local HTTP but requires HTTPS for non-local deployments', function () {
+    assert.equal(auth0.loadAuthConfig(deploymentEnv({ APP_URL: 'http://127.0.0.1:3000' })).ready, true);
+    assert.equal(auth0.loadAuthConfig(deploymentEnv({ APP_URL: 'http://chat.example.test' })).ready, false);
   });
 });

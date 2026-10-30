@@ -39,15 +39,11 @@ describe('integracion de configuracion publica y origenes', function () {
 
   beforeAll(function (done) {
     service = createServer({
-      authConfig: { allowedOrigins: ['https://chat.example.test'], testMode: false },
-      publicConfig: {
-        ready: true,
-        auth0Domain: 'tenant.example.auth0.com',
-        auth0ClientId: 'public-client-id',
-        auth0Audience: 'https://api.example.test',
-        auth0RedirectUri: 'https://chat.example.test',
-        socketUrl: 'https://socket.example.test',
-        testMode: false
+      env: {
+        AUTH0_DOMAIN: 'tenant.example.auth0.com',
+        AUTH0_CLIENT_ID: 'public-client-id',
+        AUTH0_AUDIENCE: 'https://api.example.test',
+        APP_URL: 'https://chat.example.test'
       },
       tokenVerifier: async function () { return { sub: 'test|ana', displayName: 'Ana' }; }
     });
@@ -74,6 +70,7 @@ describe('integracion de configuracion publica y origenes', function () {
     expect(result.response.headers['content-type']).toMatch(/^application\/javascript/);
     expect(result.response.headers['cache-control']).toBe('no-store');
     expect(result.body).toContain('public-client-id');
+    expect(result.body.match(/https:\/\/chat\.example\.test/g)).toHaveLength(2);
     expect(result.body).not.toContain('CLIENT_SECRET');
   });
 

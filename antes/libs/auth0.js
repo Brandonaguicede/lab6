@@ -4,9 +4,7 @@ var REQUIRED_VALUES = [
   'AUTH0_DOMAIN',
   'AUTH0_AUDIENCE',
   'AUTH0_CLIENT_ID',
-  'AUTH0_REDIRECT_URI',
-  'SOCKET_URL',
-  'ALLOWED_ORIGINS'
+  'APP_URL'
 ];
 
 function text(value) {
@@ -45,15 +43,6 @@ function normalizePublicUrl(value, originOnly) {
   }
 }
 
-function exactOrigins(value) {
-  var parts = text(value).split(',').map(function (origin) { return origin.trim(); });
-  var origins = parts.map(function (origin) { return normalizePublicUrl(origin, true); });
-  return {
-    valid: parts.length > 0 && origins.every(Boolean),
-    values: origins.filter(Boolean)
-  };
-}
-
 function authError(code, cause) {
   var error = new Error(code);
   error.code = code;
@@ -66,12 +55,8 @@ function loadAuthConfig(env) {
   var missing = REQUIRED_VALUES.filter(function (name) { return !text(env[name]); });
   var domain = normalizeDomain(env.AUTH0_DOMAIN);
   if (text(env.AUTH0_DOMAIN) && !domain && !missing.includes('AUTH0_DOMAIN')) missing.push('AUTH0_DOMAIN');
-  var redirectUri = normalizePublicUrl(env.AUTH0_REDIRECT_URI, true);
-  var socketUrl = normalizePublicUrl(env.SOCKET_URL, true);
-  var origins = exactOrigins(env.ALLOWED_ORIGINS);
-  if (text(env.AUTH0_REDIRECT_URI) && !redirectUri && !missing.includes('AUTH0_REDIRECT_URI')) missing.push('AUTH0_REDIRECT_URI');
-  if (text(env.SOCKET_URL) && !socketUrl && !missing.includes('SOCKET_URL')) missing.push('SOCKET_URL');
-  if (text(env.ALLOWED_ORIGINS) && !origins.valid && !missing.includes('ALLOWED_ORIGINS')) missing.push('ALLOWED_ORIGINS');
+  var appUrl = normalizePublicUrl(env.APP_URL, true);
+  if (text(env.APP_URL) && !appUrl && !missing.includes('APP_URL')) missing.push('APP_URL');
   var testMode = env.NODE_ENV === 'test' && env.AUTH_TEST_MODE === '1';
   var issuer = domain ? 'https://' + domain + '/' : '';
 
@@ -81,12 +66,12 @@ function loadAuthConfig(env) {
     domain: domain,
     audience: text(env.AUTH0_AUDIENCE),
     clientId: text(env.AUTH0_CLIENT_ID),
-    redirectUri: redirectUri,
-    socketUrl: socketUrl,
+    redirectUri: appUrl,
+    socketUrl: appUrl,
     issuer: issuer,
     jwksUri: issuer ? issuer + '.well-known/jwks.json' : '',
     algorithms: ['RS256'],
-    allowedOrigins: origins.values,
+    allowedOrigins: appUrl ? [appUrl] : [],
     displayNameClaim: text(env.AUTH0_DISPLAY_NAME_CLAIM),
     testMode: testMode
   };
