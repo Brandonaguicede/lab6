@@ -57,8 +57,27 @@ su requisito. `adfe3c1` es la integracion conjunta ya comprobada.
 El repositorio anterior se conserva sin cambios. `origin` se redirigio al
 repositorio nuevo y vacio `https://github.com/Brandonaguicede/lab6.git`, que
 acepta el historial local sin merge ni push forzado. `repositorio.txt` guarda
-esa URL real. La publicacion de ramas puede realizarse mediante Git; los PRs
-no se simulan y requieren GitHub CLI autenticado o creacion manual en GitHub.
+esa URL real. Se publicaron `main`, `feat/lab5-security-tests-harness`,
+`lab5/harness-base`, `lab5/req-010`, `lab5/req-011` y `lab5/req-012`.
+
+## Pull Requests preparados
+
+Los PRs no se han creado automaticamente porque GitHub CLI no esta disponible.
+Se deben abrir contra `lab5/harness-base` con estos enlaces y contenidos:
+
+| PR | Enlace de comparacion | Criterio y evidencia |
+| --- | --- | --- |
+| REQ-010 | `https://github.com/Brandonaguicede/lab6/compare/lab5/harness-base...lab5/req-010?expand=1` | Mensaje vacio, espacios o saltos de linea no se publica; campo vacio y aviso visible. Evidencia: E2E REQ-010 y lock independiente. |
+| REQ-011 | `https://github.com/Brandonaguicede/lab6/compare/lab5/harness-base...lab5/req-011?expand=1` | Nombre vacio o espacios con mensaje real no se publica; nombre vacio y aviso visible. Evidencia: E2E REQ-011 y lock independiente. |
+| REQ-012 | `https://github.com/Brandonaguicede/lab6/compare/lab5/harness-base...lab5/req-012?expand=1` | 279/280 caracteres se aceptan; 281 o mas no se publica, se conserva y avisa. Evidencia: pruebas unitaria/E2E y lock independiente. |
+
+Cada PR debe incluir el resultado integrado: 19 unitarias, 6 de integracion,
+8 E2E, OpenSpec valido y Snyk con 0 incidencias. FoFo aprobo todos los gates
+excepto la escalacion `deps-gate`, conservada y explicada en
+`antes/docs/FOFO_DEPS_GATE.md`.
+
+Los PRs no se simulan y requieren GitHub CLI autenticado o creacion manual en
+GitHub.
 
 Tambien falta que GitHub CLI quede disponible y autenticado mediante:
 

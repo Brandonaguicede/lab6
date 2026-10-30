@@ -51,21 +51,22 @@ de Judge y Author. FoFo aprobo spec, trazabilidad, red/green, intencion,
 secretos, lock, integridad y separacion. `deps-gate` conserva una escalacion
 honesta documentada en `antes/docs/FOFO_DEPS_GATE.md`; no se desactivo.
 
-## Publicacion pendiente de informacion externa
+## Publicacion y PRs pendientes
 
 - El remoto anterior se conserva sin cambios. `origin` ahora apunta al nuevo
   repositorio vacio `https://github.com/Brandonaguicede/lab6.git`, destinado a
   publicar esta integracion local sin mezclar historiales independientes.
 - `repositorio.txt` contiene la URL real de ese repositorio.
-- GitHub CLI aun no esta disponible en el entorno (`gh` no se encontro). Las
-  ramas pueden publicarse mediante Git, pero los PRs reales requieren `gh` o
-  creacion manual desde GitHub.
+- Se publicaron `main`, `feat/lab5-security-tests-harness`,
+  `lab5/harness-base`, `lab5/req-010`, `lab5/req-011` y `lab5/req-012`.
+- GitHub CLI aun no esta disponible en el entorno (`gh` no se encontro). Los
+  PRs reales requieren `gh` o creacion manual desde GitHub; no se simulan.
 - Cuando termine la instalacion de GitHub CLI, ejecute localmente:
 
   ```powershell
   gh auth login
   ```
 
-  Despues del push, cree tres PRs hacia `lab5/harness-base` o permita
-  que el agente los cree con GitHub CLI. Los PRs incluyen REQ-010, REQ-011 y
-  REQ-012, sus pruebas independientes y su trazabilidad FoFo.
+  Cree tres PRs hacia `lab5/harness-base` o permita que el agente los cree
+  con GitHub CLI. Los enlaces de comparacion y los criterios de aceptacion
+  estan en `LAB5_FINAL_REPORT.md`.
