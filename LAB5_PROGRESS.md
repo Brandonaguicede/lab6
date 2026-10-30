@@ -53,22 +53,19 @@ honesta documentada en `antes/docs/FOFO_DEPS_GATE.md`; no se desactivo.
 
 ## Publicacion pendiente de informacion externa
 
-- `origin` ya apunta a `https://github.com/Brandonaguicede/lab5.git` y sus
-  referencias se descargaron sin publicar cambios.
-- `origin/main` (`6ffb103`) no comparte ancestro con la integracion local:
-  contiene otra estructura de Parte 1 (`antes/` historico y `despues/`
-  corregido), mientras `adfe3c1` trabaja sobre `antes/`. No se debe hacer un
-  push forzado, ni abrir PRs sin reconcilio, porque se perderian o duplicarian
-  cambios ya publicados.
-- GitHub CLI aun no esta disponible en el entorno (`gh` no se encontro). No
-  hay PRs reales ni se creo `repositorio.txt` con una URL inventada.
+- El remoto anterior se conserva sin cambios. `origin` ahora apunta al nuevo
+  repositorio vacio `https://github.com/Brandonaguicede/lab6.git`, destinado a
+  publicar esta integracion local sin mezclar historiales independientes.
+- `repositorio.txt` contiene la URL real de ese repositorio.
+- GitHub CLI aun no esta disponible en el entorno (`gh` no se encontro). Las
+  ramas pueden publicarse mediante Git, pero los PRs reales requieren `gh` o
+  creacion manual desde GitHub.
 - Cuando termine la instalacion de GitHub CLI, ejecute localmente:
 
   ```powershell
   gh auth login
   ```
 
-  Antes de publicar, debe decidirse cual arbol es la base canonica: la
-  integracion local `adfe3c1` o el `origin/main` ya publicado. Con esa decision
-  se prepara un merge controlado o ramas nuevas basadas en el remoto, se crean
-  los tres PRs y se escribe la URL real en `repositorio.txt`.
+  Despues del push, cree tres PRs hacia `lab5/base-security-media` o permita
+  que el agente los cree con GitHub CLI. Los PRs incluyen REQ-010, REQ-011 y
+  REQ-012, sus pruebas independientes y su trazabilidad FoFo.

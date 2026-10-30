@@ -54,13 +54,11 @@ eso sus PRs deben tener como base una rama remota que apunte a ese commit,
 por ejemplo `lab5/base-security-media`. Asi cada PR contiene exclusivamente
 su requisito. `adfe3c1` es la integracion conjunta ya comprobada.
 
-`origin` fue configurado con `https://github.com/Brandonaguicede/lab5.git` y
-se hizo `fetch` sin publicar. Su rama `main` (`6ffb103`) tiene un historial sin
-ancestro comun con este laboratorio local y otra arquitectura: conserva
-`antes/` como evidencia y usa `despues/` para el codigo corregido. La rama
-local `adfe3c1` modifica `antes/`. No se simulan PRs, no se hace push forzado
-ni se crea `repositorio.txt` hasta elegir la base canonica y reconciliar ambos
-arboles sin perder el trabajo remoto.
+El repositorio anterior se conserva sin cambios. `origin` se redirigio al
+repositorio nuevo y vacio `https://github.com/Brandonaguicede/lab6.git`, que
+acepta el historial local sin merge ni push forzado. `repositorio.txt` guarda
+esa URL real. La publicacion de ramas puede realizarse mediante Git; los PRs
+no se simulan y requieren GitHub CLI autenticado o creacion manual en GitHub.
 
 Tambien falta que GitHub CLI quede disponible y autenticado mediante:
 
@@ -76,5 +74,5 @@ gh auth login
 3. Abra `antes/docs/FOFO_DEPS_GATE.md` para explicar la separacion Judge /
    Author, worktrees y la escalacion conservada.
 4. Ejecute `npx snyk test` autenticado para mostrar 0 incidencias.
-5. Tras reconciliar la base canonica, presente los tres PRs y la URL real en
+5. Presente los tres PRs sobre `lab5/base-security-media` y la URL real en
    `repositorio.txt`.
