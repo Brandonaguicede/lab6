@@ -11,3 +11,5 @@
 | 2026-10-30 | Approve US-01 specification and plan in autopilot. | The repository owner explicitly requested autonomous implementation and supplied the required authentication, testing and deployment scope. |
 | 2026-10-30 | Use the pinned Auth0 SPA browser bundle and a JWT/JWKS backend verifier. | The current frontend has no build step; the browser SDK provides PKCE while the persistent Node service remains the authorization boundary. |
 | 2026-10-30 | Permit deterministic test authentication only under `NODE_ENV=test` plus an explicit test flag. | Automated login/logout and Socket.IO tests need no real tenant or token; production must fail closed. |
+| 2026-10-30 | Accept only a root Auth0 callback URL. | Express and the Vercel output serve the SPA at `/`; other paths fail configuration instead of returning 404 after login. |
+| 2026-10-30 | Test production browser branches with an intercepted Auth0 SDK. | It executes the real client contract deterministically while Google remains a separate external smoke test. |

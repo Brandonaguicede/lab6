@@ -48,3 +48,27 @@ slug: us-01-auth0-google
 - files: `tests/e2e/auth.spec.js`, `tests/e2e/chat.spec.js`, `tests/e2e/message-validation.spec.js`, `playwright.config.js`
 - decision: E2E uses test authentication only under `NODE_ENV=test` plus `AUTH_TEST_MODE=1`; production cannot activate this path accidentally.
 - blocker: none
+
+## T006 — 2026-10-30
+- status: complete
+- red: los escenarios de autenticación fallaron antes de existir UI, sesión y logout; la cancelación quedó sin mensaje hasta su prueba roja.
+- green: las ramas determinista y `testMode:false` aprobaron protección, callback, logout, error, restauración y reconexión.
+- triangulation: cerrar el transporte obliga una segunda adquisición de token; si falla, el chat vuelve a no autenticado.
+- files: `index.html`, `client.js`, `server.js`, `libs/auth0.js`, pruebas E2E.
+- decision: token en memoria e identidad inyectada por el servidor antes de validar el mensaje.
+- blocker: none
+
+## T007 — 2026-10-30
+- status: complete
+- red: deployment falló porque no existían builder, `vercel.json` ni configuración de aplicación.
+- green: el build genera tres archivos, rechaza test mode y no contiene el sentinel secreto.
+- files: `.env.example`, `scripts/build-frontend.js`, `vercel.json`, `.gitignore`, documentación Lab 8.
+- decision: Vercel sirve solo frontend; Socket.IO permanece en Node persistente.
+- blocker: publicación real pendiente de autorización externa.
+
+## T008 — 2026-10-30
+- status: complete-local
+- green: 33 unitarias, 14 integración y 16 E2E; build, sintaxis, audit, secret scan y harness fixture aprobados.
+- review: seguridad, corrección y pruebas APPROVE después de corregir logout, callback y reconexión.
+- evidence: `02-DOCS/wiki/sdd/verifications/us-01-auth0-google-2026-10-30.md`.
+- blocker: Auth0/Google y despliegue reales requieren configuración externa.
