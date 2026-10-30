@@ -299,8 +299,8 @@
     setBusy(true);
     try {
       if (socket) socket.disconnect();
+      setSignedOut();
       await authClient.logout({ logoutParams: { returnTo: config.auth0RedirectUri || window.location.origin } });
-      if (config.testMode) setSignedOut();
     } catch (exception) {
       showError('AUTHENTICATION_REQUIRED');
     } finally {

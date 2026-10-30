@@ -53,6 +53,15 @@ describe('Auth0 runtime configuration', function () {
     assert.ok(config.missing.includes('ALLOWED_ORIGINS'));
   });
 
+  it('rejects callback paths that the static SPA does not serve', function () {
+    var config = auth0.loadAuthConfig(validEnv({
+      AUTH0_REDIRECT_URI: 'https://chat.example.test/callback'
+    }));
+
+    assert.equal(config.ready, false);
+    assert.ok(config.missing.includes('AUTH0_REDIRECT_URI'));
+  });
+
   it('enables deterministic test mode only with both explicit flags', function () {
     assert.equal(auth0.loadAuthConfig({ NODE_ENV: 'test' }).testMode, false);
     assert.equal(auth0.loadAuthConfig({ AUTH_TEST_MODE: '1' }).testMode, false);

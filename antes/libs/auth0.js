@@ -66,7 +66,7 @@ function loadAuthConfig(env) {
   var missing = REQUIRED_VALUES.filter(function (name) { return !text(env[name]); });
   var domain = normalizeDomain(env.AUTH0_DOMAIN);
   if (text(env.AUTH0_DOMAIN) && !domain && !missing.includes('AUTH0_DOMAIN')) missing.push('AUTH0_DOMAIN');
-  var redirectUri = normalizePublicUrl(env.AUTH0_REDIRECT_URI, false);
+  var redirectUri = normalizePublicUrl(env.AUTH0_REDIRECT_URI, true);
   var socketUrl = normalizePublicUrl(env.SOCKET_URL, true);
   var origins = exactOrigins(env.ALLOWED_ORIGINS);
   if (text(env.AUTH0_REDIRECT_URI) && !redirectUri && !missing.includes('AUTH0_REDIRECT_URI')) missing.push('AUTH0_REDIRECT_URI');
