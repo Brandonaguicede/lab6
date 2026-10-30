@@ -1,19 +1,19 @@
 ---
 type: constitution
 title: antes — Constitution
-description: Draft written by rsc onboard from the accepted plan; not ratified.
+description: Ratified project principles for UNA Chat.
 tags: [sdd, constitution]
 timestamp: 2026-10-30T03:47:05Z
 topic: sdd
-status: draft
-version: draft
+status: ratified
+version: 1.0.0
+ratified_at: 2026-10-30
+last_amended_at: 2026-10-30
 ---
 
 # antes — Constitution
 
-> **borrador — complétalo con la fase `constitution` antes del primer SDD.**
-> Draft: complete it with the `constitution` phase before the first SDD feature. It holds only what
-> onboarding knew; it ratifies no principle. Ratifying it removes `status: draft` and starts at v1.0.0.
+> Ratified by the repository owner on 2026-10-30.
 
 ## Known facts (from onboarding)
 
@@ -22,44 +22,68 @@ version: draft
 - How code changes land: branches closed with a pull request; the default branch is closed to direct work (`--workflow branches`).
 - Stack evidence: Detected at install: node (from package.json). Not ratified yet.
 
-## 1. Stack canon
+## Principles
 
-Detected at install: node (from package.json). Not ratified yet.
+The following rules were derived from the confirmed task and inspected UNA Chat
+code. The `Lab8.docx` document is not present in this checkout, so no rubric
+requirement is inferred here.
 
-## 2. Quality bar
+1. **Preserve the current application boundary.** UNA Chat remains a Node.js
+   CommonJS application using Express `4.22.3` and Socket.IO `4.8.4` unless a
+   later SDD decision records a compatible migration. `package.json` and the
+   automated suites are the enforcement evidence.
+2. **Work test-first and keep Lab 5 behaviour.** Each change in chat,
+   authentication or realtime protocol has an automated test that fails before
+   the implementation and passes after it. `npm test` is required for every
+   change; `npm run test:e2e` is also required when browser or Socket.IO
+   behaviour changes.
+3. **Validate and render messages as Lab 5 does.** `libs/unalib.js` remains the
+   canonical validator for message content, and the browser continues to render
+   user content with DOM nodes and `textContent`, never user-supplied HTML.
+   Unit, integration and E2E regression tests enforce this rule.
+4. **Trust server-verified identity only.** The server derives a chat identity
+   from a credential validated during the Socket.IO handshake, not from a
+   client-provided name. Tests cover missing, invalid, expired, wrong-issuer,
+   wrong-audience and disallowed-algorithm credentials.
+5. **Keep credentials out of Git and logs.** Secrets, private keys and raw
+   access tokens are never committed or logged. Runtime configuration is read
+   from environment variables; `.env` files are ignored and only value-free
+   examples may be versioned. A pre-commit review and repository secret scan
+   provide the enforcement evidence.
+6. **Give authentication a safe, accessible failure mode.** Login, logout,
+   session state and authentication errors are visible to keyboard and screen
+   reader users, and errors do not reveal token, provider or verification
+   details. Playwright coverage and code review enforce this rule.
+7. **Keep deployment concerns separable.** The frontend is deployable to Vercel
+   without embedding secrets. Socket.IO remains compatible with a persistent
+   Node service; any serverless scaling, pub/sub or deployment change needs a
+   recorded SDD decision and verification evidence.
+8. **Keep decisions and authorship auditable.** Significant decisions are
+   appended to `02-DOCS/wiki/sdd/decisions.md`. Work remains on a feature
+   branch, with no direct `main` merge or remote publication without explicit
+   authorization. Git authorship remains human and commits contain no AI
+   attribution footer.
 
-_Pending — to be completed in the `constitution` phase._
+## Definition of Done
 
-## 3. Conventions
-
-_Pending — to be completed in the `constitution` phase._
-
-## 4. Branching & shipping
-
-Chosen at install: branches closed with a pull request; the default branch is closed to direct work. _Pending — to be completed in the `constitution` phase._
-
-## 5. Security & privacy floor
-
-_Pending — to be completed in the `constitution` phase._
-
-## 6. UX / accessibility floor (if there is a UI)
-
-_Pending — to be completed in the `constitution` phase._
-
-## 7. Performance budgets (where they matter)
-
-_Pending — to be completed in the `constitution` phase._
-
-## 8. Knowledge & decisions
-
-_Pending — to be completed in the `constitution` phase._
-
-## Definition of Done (the merge bar `verify` runs against)
-
-_Pending — to be completed in the `constitution` phase._
+- [ ] The implementation conforms to the approved US-01 specification and
+      technical plan.
+- [ ] New authentication paths have unit and integration coverage, including
+      all rejected-token cases.
+- [ ] `npm test` passes; browser or Socket.IO changes also pass
+      `npm run test:e2e`.
+- [ ] Lab 5 message validation, XSS protections and allowed media behaviour
+      retain passing regression tests.
+- [ ] No real credentials, private keys, raw tokens or local `.env` files are
+      staged; a value-free configuration example and operator instructions
+      exist.
+- [ ] The SDD decision log, US-01 artifacts and verification evidence are
+      updated.
 
 ## Amendment log (append-only)
 
 | Date | Version | Change | Why |
 |------|---------|--------|-----|
 | 2026-10-30 | draft | Draft generated by `rsc onboard`. | The SDD floor needs a constitution; ratification is the `constitution` phase's. |
+| 2026-10-30 | draft | Proposed eight testable principles and Definition of Done. | Derived from the confirmed request and inspected UNA Chat code; awaiting owner ratification. |
+| 2026-10-30 | 1.0.0 | Constitution ratified. | The repository owner explicitly approved the eight principles and Definition of Done. |
