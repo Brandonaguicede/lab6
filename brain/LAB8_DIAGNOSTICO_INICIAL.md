@@ -244,14 +244,15 @@ Lab 5.
   colisiones. `hookWired: true`; el archivo `.codex/hooks.json` contiene los
   hooks de memoria, sincronizacion y ciclo de sesion de Codex.
 - `rsc memory status`: modo `full`, estado `degraded` con razon
-  `memory-path-tracked`. Al quedar UNA Chat en `antes/` y el repositorio Git
-  en su directorio padre, los hooks generados resuelven
-  `$(git rev-parse --show-toplevel)/.rsc`, una ruta inexistente en este
-  checkout. Las skills y la declaracion de hooks estan instaladas, pero la
-  memoria por hooks no puede considerarse funcional hasta que se apruebe una
-  correccion de esa topologia. `rsc` recomienda `sync` y mover la configuracion
-  de memoria a una ubicacion local no rastreada; no se ejecuta porque podria
-  cambiar archivos fuera del preview aprobado.
+  `memory-path-tracked`. El 2026-10-30 se corrigio la resolucion de los hooks
+  sin mover la topologia: cada comando usa
+  `<git-root>/antes/.rsc/...` y define `RSC_PROJECT_CWD=<git-root>/antes`.
+  Una ejecucion real del evento `boundary` encontro el harness correcto, creo
+  su estado local bajo `antes/.rsc/memory/` y no creo `.rsc/` en la raiz Git.
+  El estado `degraded` restante refleja que rsc considera rastreados sus
+  archivos de configuracion; el estado de memoria local queda sin versionar.
+  No se ejecuto `rsc sync` porque cambiar a una configuracion local no
+  rastreada excede la correccion minima aprobada.
 - `rsc worktrees`: no hay worktrees por limpiar. Su diagnostico de higiene
   informa `not-a-repo` porque el arnes reside en `antes/` mientras el directorio
   Git es su padre. La rama `feat/lab8-auth0` ya provee aislamiento para esta

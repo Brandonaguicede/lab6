@@ -6,9 +6,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.rsc/session-memory-adapter.mjs\" codex edit",
+            "command": "RSC_PROJECT_CWD=\"$(git rev-parse --show-toplevel)/antes\" node \"$(git rev-parse --show-toplevel)/antes/.rsc/session-memory-adapter.mjs\" codex edit",
             "timeout": 5,
-            "commandWindows": "node \"$((git rev-parse --show-toplevel).Trim())/.rsc/session-memory-adapter.mjs\" codex edit",
+            "commandWindows": "$env:RSC_PROJECT_CWD = \"$((git rev-parse --show-toplevel).Trim())/antes\"; node \"$((git rev-parse --show-toplevel).Trim())/antes/.rsc/session-memory-adapter.mjs\" codex edit",
             "additionalContextLimit": 1400
           }
         ]
@@ -18,9 +18,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.rsc/session-memory-adapter.mjs\" codex boundary",
+            "command": "RSC_PROJECT_CWD=\"$(git rev-parse --show-toplevel)/antes\" node \"$(git rev-parse --show-toplevel)/antes/.rsc/session-memory-adapter.mjs\" codex boundary",
             "timeout": 5,
-            "commandWindows": "node \"$((git rev-parse --show-toplevel).Trim())/.rsc/session-memory-adapter.mjs\" codex boundary",
+            "commandWindows": "$env:RSC_PROJECT_CWD = \"$((git rev-parse --show-toplevel).Trim())/antes\"; node \"$((git rev-parse --show-toplevel).Trim())/antes/.rsc/session-memory-adapter.mjs\" codex boundary",
             "additionalContextLimit": 1400
           }
         ]
@@ -31,9 +31,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.rsc/session-memory-adapter.mjs\" codex compact",
+            "command": "RSC_PROJECT_CWD=\"$(git rev-parse --show-toplevel)/antes\" node \"$(git rev-parse --show-toplevel)/antes/.rsc/session-memory-adapter.mjs\" codex compact",
             "timeout": 5,
-            "commandWindows": "node \"$((git rev-parse --show-toplevel).Trim())/.rsc/session-memory-adapter.mjs\" codex compact",
+            "commandWindows": "$env:RSC_PROJECT_CWD = \"$((git rev-parse --show-toplevel).Trim())/antes\"; node \"$((git rev-parse --show-toplevel).Trim())/antes/.rsc/session-memory-adapter.mjs\" codex compact",
             "additionalContextLimit": 1400
           }
         ]
@@ -44,9 +44,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.rsc/session-memory-adapter.mjs\" codex end",
+            "command": "RSC_PROJECT_CWD=\"$(git rev-parse --show-toplevel)/antes\" node \"$(git rev-parse --show-toplevel)/antes/.rsc/session-memory-adapter.mjs\" codex end",
             "timeout": 3,
-            "commandWindows": "node \"$((git rev-parse --show-toplevel).Trim())/.rsc/session-memory-adapter.mjs\" codex end",
+            "commandWindows": "$env:RSC_PROJECT_CWD = \"$((git rev-parse --show-toplevel).Trim())/antes\"; node \"$((git rev-parse --show-toplevel).Trim())/antes/.rsc/session-memory-adapter.mjs\" codex end",
             "additionalContextLimit": 1400
           }
         ]
@@ -58,9 +58,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.rsc/session-memory-adapter.mjs\" codex start",
+            "command": "RSC_PROJECT_CWD=\"$(git rev-parse --show-toplevel)/antes\" node \"$(git rev-parse --show-toplevel)/antes/.rsc/session-memory-adapter.mjs\" codex start",
             "timeout": 5,
-            "commandWindows": "node \"$((git rev-parse --show-toplevel).Trim())/.rsc/session-memory-adapter.mjs\" codex start",
+            "commandWindows": "$env:RSC_PROJECT_CWD = \"$((git rev-parse --show-toplevel).Trim())/antes\"; node \"$((git rev-parse --show-toplevel).Trim())/antes/.rsc/session-memory-adapter.mjs\" codex start",
             "additionalContextLimit": 1400
           }
         ]
@@ -69,9 +69,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.rsc/auto-update.mjs\" hook codex",
+            "command": "RSC_PROJECT_CWD=\"$(git rev-parse --show-toplevel)/antes\" node \"$(git rev-parse --show-toplevel)/antes/.rsc/auto-update.mjs\" hook codex",
             "timeout": 10,
-            "commandWindows": "node \"$((git rev-parse --show-toplevel).Trim())/.rsc/auto-update.mjs\" hook codex"
+            "commandWindows": "$env:RSC_PROJECT_CWD = \"$((git rev-parse --show-toplevel).Trim())/antes\"; node \"$((git rev-parse --show-toplevel).Trim())/antes/.rsc/auto-update.mjs\" hook codex"
           }
         ]
       }
@@ -81,9 +81,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.rsc/session-memory-adapter.mjs\" codex turn",
+            "command": "RSC_PROJECT_CWD=\"$(git rev-parse --show-toplevel)/antes\" node \"$(git rev-parse --show-toplevel)/antes/.rsc/session-memory-adapter.mjs\" codex turn",
             "timeout": 5,
-            "commandWindows": "node \"$((git rev-parse --show-toplevel).Trim())/.rsc/session-memory-adapter.mjs\" codex turn",
+            "commandWindows": "$env:RSC_PROJECT_CWD = \"$((git rev-parse --show-toplevel).Trim())/antes\"; node \"$((git rev-parse --show-toplevel).Trim())/antes/.rsc/session-memory-adapter.mjs\" codex turn",
             "additionalContextLimit": 1400
           }
         ]
@@ -92,9 +92,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.rsc/knowledge-sync.mjs\" hook codex turn",
+            "command": "RSC_PROJECT_CWD=\"$(git rev-parse --show-toplevel)/antes\" node \"$(git rev-parse --show-toplevel)/antes/.rsc/knowledge-sync.mjs\" hook codex turn",
             "timeout": 10,
-            "commandWindows": "node \"$((git rev-parse --show-toplevel).Trim())/.rsc/knowledge-sync.mjs\" hook codex turn"
+            "commandWindows": "$env:RSC_PROJECT_CWD = \"$((git rev-parse --show-toplevel).Trim())/antes\"; node \"$((git rev-parse --show-toplevel).Trim())/antes/.rsc/knowledge-sync.mjs\" hook codex turn"
           }
         ]
       }
@@ -104,9 +104,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.rsc/session-memory-adapter.mjs\" codex request",
+            "command": "RSC_PROJECT_CWD=\"$(git rev-parse --show-toplevel)/antes\" node \"$(git rev-parse --show-toplevel)/antes/.rsc/session-memory-adapter.mjs\" codex request",
             "timeout": 5,
-            "commandWindows": "node \"$((git rev-parse --show-toplevel).Trim())/.rsc/session-memory-adapter.mjs\" codex request",
+            "commandWindows": "$env:RSC_PROJECT_CWD = \"$((git rev-parse --show-toplevel).Trim())/antes\"; node \"$((git rev-parse --show-toplevel).Trim())/antes/.rsc/session-memory-adapter.mjs\" codex request",
             "additionalContextLimit": 1400
           }
         ]
@@ -115,9 +115,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.rsc/knowledge-sync.mjs\" hook codex request",
+            "command": "RSC_PROJECT_CWD=\"$(git rev-parse --show-toplevel)/antes\" node \"$(git rev-parse --show-toplevel)/antes/.rsc/knowledge-sync.mjs\" hook codex request",
             "timeout": 10,
-            "commandWindows": "node \"$((git rev-parse --show-toplevel).Trim())/.rsc/knowledge-sync.mjs\" hook codex request"
+            "commandWindows": "$env:RSC_PROJECT_CWD = \"$((git rev-parse --show-toplevel).Trim())/antes\"; node \"$((git rev-parse --show-toplevel).Trim())/antes/.rsc/knowledge-sync.mjs\" hook codex request"
           }
         ]
       }

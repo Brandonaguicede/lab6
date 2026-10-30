@@ -7,3 +7,4 @@
 | 2026-10-30 | Keep Socket.IO on a persistent Node service and host the static frontend on Vercel. | The current server broadcasts in memory and calls `http.listen`; Vercel Functions need reconnection and shared pub/sub to scale that safely. |
 | 2026-10-30 | Keep US-01 artifacts as drafts. | `Lab8.docx`, Auth0 tenant values and formal constitution/spec approval are unavailable. |
 | 2026-10-30 | Ratify constitution v1.0.0. | The repository owner explicitly approved its eight testable principles and Definition of Done before US-01 implementation. |
+| 2026-10-30 | Bind Codex hooks to the nested harness directory. | `RSC_PROJECT_CWD` and the `antes/.rsc` script path make memory resolve correctly without moving the Git repository. |
