@@ -243,9 +243,15 @@ Lab 5.
 - `rsc agents status`: los cinco agentes instalados estan presentes y sin
   colisiones. `hookWired: true`; el archivo `.codex/hooks.json` contiene los
   hooks de memoria, sincronizacion y ciclo de sesion de Codex.
-- `rsc memory status`: modo `full`, estado `ready`. Codex requiere una unica
-  accion manual de confianza mediante `/hooks` para ejecutar los hooks del
-  proyecto; no se puede ni se debe simular esa aprobacion desde el repositorio.
+- `rsc memory status`: modo `full`, estado `degraded` con razon
+  `memory-path-tracked`. Al quedar UNA Chat en `antes/` y el repositorio Git
+  en su directorio padre, los hooks generados resuelven
+  `$(git rev-parse --show-toplevel)/.rsc`, una ruta inexistente en este
+  checkout. Las skills y la declaracion de hooks estan instaladas, pero la
+  memoria por hooks no puede considerarse funcional hasta que se apruebe una
+  correccion de esa topologia. `rsc` recomienda `sync` y mover la configuracion
+  de memoria a una ubicacion local no rastreada; no se ejecuta porque podria
+  cambiar archivos fuera del preview aprobado.
 - `rsc worktrees`: no hay worktrees por limpiar. Su diagnostico de higiene
   informa `not-a-repo` porque el arnes reside en `antes/` mientras el directorio
   Git es su padre. La rama `feat/lab8-auth0` ya provee aislamiento para esta
@@ -263,3 +269,14 @@ constitucion y se elaboraran especificacion, aclaraciones y plan tecnico sin
 modificar autenticacion ni crear credenciales. La arquitectura candidata se
 mantiene: SPA con PKCE y Universal Login, token de API en el handshake de
 Socket.IO, validacion JWT en el backend y despliegue separado para Socket.IO.
+
+### Artefactos preliminares de US-01
+
+- Se calibro el runtime SDD con Node, Express, Socket.IO, npm, Mocha, Jest y
+  Playwright; mantiene TDD estricto y los comandos `npm test` y
+  `npm run test:e2e`.
+- Se redactaron en estado `draft` la especificacion y el plan tecnico de
+  `us-01-auth0-google` dentro de `antes/02-DOCS/`.
+- No se implemento Auth0. La ausencia de `Lab8.docx`, los valores del tenant y
+  la ratificacion formal de la constitucion, especificacion y plan bloquean la
+  implementacion, pero no la documentacion preparatoria.

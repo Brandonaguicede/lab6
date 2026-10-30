@@ -1,0 +1,47 @@
+version: 1
+project:
+  root: .
+  stacks: [node, express, socket.io, browser-javascript]
+  package_managers: [npm]
+  monorepo: false
+  signals: [package.json, package-lock.json, server.js, playwright.config.js]
+sdd:
+  artifact_store: 02-DOCS/wiki/sdd
+  execution_mode: automatic
+  registry_path: .rsc/skill-registry.json
+  review_budget: { line_budget: 400, file_budget: 12 }
+  delivery_strategy: { default: single-pr }
+testing:
+  strict_tdd: true
+  runners: [mocha, jest, playwright]
+  commands:
+    apply: [npm test]
+    verify: [npm test, npm run test:e2e]
+phase_rules:
+  proposal: optional-on-ambiguity
+  specify: requires intent or proposal
+  plan: requires spec
+  tasks: requires plan and spec
+  analyze: requires spec plan tasks
+  implement: requires analyze pass, strict_tdd when testing.strict_tdd is true
+  verify: requires spec tasks evidence
+  archive: requires verify record and review/ship outcome
+models:
+  enabled: false
+  provider: openai
+  tiers: { heavy: gpt-5.1, balanced: gpt-5.1-mini, light: gpt-5.1-nano }
+  phases:
+    constitution: heavy
+    specify: balanced
+    clarify: balanced
+    plan: heavy
+    tasks: balanced
+    analyze: heavy
+    implement: balanced
+    verify: balanced
+    review: heavy
+    ship: light
+    debug: heavy
+    worktrees: light
+    sdd-init: light
+  overrides: {}
