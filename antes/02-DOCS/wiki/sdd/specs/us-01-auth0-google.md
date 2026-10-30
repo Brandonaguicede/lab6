@@ -40,15 +40,15 @@ does not authenticate the person or let the server verify their identity.
 
 ## Non-goals and out of scope
 
-- Creating Auth0 or Google credentials, configuring a tenant, deploying Vercel
-  or persisting tokens in this repository.
+- Creating Auth0 or Google credentials, configuring a tenant, publishing the
+  external service or persisting tokens in this repository.
 - Other providers, account linking, roles, profiles or chat persistence.
 - Replacing Lab 5 media validation, message limits or error semantics.
 
 ## Users and context
 
-A student opens UNA Chat locally or from its future Vercel frontend, completes
-Google authentication through Auth0, and expects to chat only while authorized.
+A student opens UNA Chat from its unified Node service, completes Google
+authentication through Auth0, and expects to chat only while authorized.
 
 ## Behaviour
 
@@ -98,8 +98,8 @@ Google authentication through Auth0, and expects to chat only while authorized.
 - **suposicion tomada, validada** — Google is the sole social provider. *Base:*
   the continuation request explicitly requires Google through Auth0. *Risk:* a
   multiple-provider rubric changes UI and test scope.
-- **decision diferida** — Final Vercel and Socket.IO domains are deployment
-  work, explicitly excluded now.
+- **decision diferida** — The final HTTPS `APP_URL` is external deployment
+  configuration; frontend and Socket.IO will use that same origin.
 - **area no formulable** — Future user profiles, persistence and roles have no
   concrete requirement yet.
 
@@ -113,3 +113,5 @@ Google authentication through Auth0, and expects to chat only while authorized.
 - 2026-10-30 — The clarified contract requires session state, visible trusted
   identity, logout, protected chat, explicit token rejection cases and Lab 5
   XSS/media regression coverage.
+- 2026-10-30 — The owner selected one persistent Node service instead of a
+  split Vercel/Socket.IO deployment. `APP_URL` is the canonical public origin.

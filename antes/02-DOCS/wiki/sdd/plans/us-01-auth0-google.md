@@ -2,7 +2,7 @@
 type: plan
 title: Plan US 01 Auth0 Google
 description: Approved technical blueprint for Auth0 Google social login in UNA Chat.
-tags: [sdd, plan, auth0, google, socket.io, vercel]
+tags: [sdd, plan, auth0, google, socket.io, node]
 timestamp: 2026-10-30T04:20:00Z
 topic: sdd
 slug: us-01-auth0-google
@@ -34,8 +34,17 @@ test and deployment, not deterministic implementation and automated tests.
 
 ## 2. Architecture
 
+### Amendment 2026-10-30 — unified Node service
+
+The repository owner replaced the split Vercel/Node deployment with one
+persistent Node service. Express serves the SPA and runtime configuration from
+the same public origin used by Socket.IO. `APP_URL` is the canonical public
+origin and derives callback, logout, web-origin, Socket.IO and exact CORS
+values. This removes cross-origin deployment configuration without changing the
+Auth0 PKCE flow or JWT authorization boundary.
+
 ```text
-[Browser: local Express or Vercel static frontend]
+[Browser: Express-served frontend]
   <- [same-origin public runtime configuration]
   -> [Auth0 Universal Login] <-> [Google connection]
   -> [Socket.IO handshake auth.token]
@@ -57,10 +66,8 @@ test and deployment, not deterministic implementation and automated tests.
 **Decision:** use a public SPA flow with Authorization Code plus PKCE and
 server-side access-token validation at Socket.IO connection time. Load the
 pinned Auth0-owned browser bundle because the existing client has no build step;
-use a JWT/JWKS verifier in the persistent Node service. Host the frontend on
-Vercel and retain Socket.IO as a persistent Node service. A Vercel-Function
-Socket.IO deployment is deferred because it needs reconnect, duration and
-shared pub/sub design beyond this feature.
+use a JWT/JWKS verifier in the persistent Node service. The same service serves
+the browser assets and Socket.IO from one HTTPS origin in production.
 
 ## 3. Interfaces and contracts
 
@@ -107,7 +114,7 @@ and broadcast execute -> logout or token failure disconnects the client.
 | Lab 5 stays protected | Unit, integration and E2E | Existing XSS, media and validation suites pass. |
 | Logout ends access | E2E and integration | Disconnect then new sign-in required. |
 | Origin policy is exact | Configuration test | Allowed origins pass; others fail. |
-| Vercel frontend is configurable | Unit and static inspection | Public configuration contains no secret and socket URL is externalized. |
+| Unified service is configurable | Unit and integration | `APP_URL` derives callback, socket URL and exact allowed origin without exposing secrets. |
 
 CI uses deterministic verifier fixtures. A manual non-secret Auth0 development
 tenant smoke test covers Google redirect, callback and logout before release.
@@ -119,7 +126,7 @@ tenant smoke test covers Google redirect, callback and logout before release.
 3. Add failing Socket.IO authentication and trusted-identity tests, then the
    handshake gate.
 4. Add failing browser session/login/logout tests, then accessible client state.
-5. Add Vercel public-configuration artifacts and operator documentation.
+5. Add public-configuration artifacts and operator documentation.
 6. Run all unit, integration and E2E evidence plus a secret scan.
 7. Configure Auth0/Google and run a manual smoke test outside Git when external
    values and deployment authorization are available.
@@ -135,7 +142,7 @@ one security contract.
 | Incorrect callback/web origins | Maintain exact local and production URL checklist outside Git. |
 | Incomplete token validation | Add negative fixtures for every required claim. |
 | Token disclosure | Secret scan and no-token logging review. |
-| Vercel Function scaling limits | Keep persistent Socket.IO service initially. |
+| In-memory Socket.IO limits horizontal scaling | Keep one persistent instance, or add a shared adapter before enabling multiple replicas. |
 
 - Open: final tenant, API audience and domains; these are external configuration.
 - Decided: broadcast identity replaces the client-provided name and is derived
@@ -159,8 +166,9 @@ one security contract.
 | T004 |  | Implement Socket.IO authorization and trusted identity binding | `npm run test:integration` passes authentication and existing Lab 5 cases | T003 | Spec: protected chat and server-derived identity |
 | T005 |  | Write failing browser login, session and logout tests | `npm run test:e2e` fails only on missing authentication UI/state | T004 | Spec: login, visible identity and logout |
 | T006 |  | Implement SPA authentication state and protected chat | `npm run test:e2e` passes auth flow plus existing XSS and media scenarios | T005 | Spec: browser behaviour and Lab 5 preservation |
-| T007 |  | Add Vercel runtime config and Auth0 operator instructions | Static config tests pass; docs contain placeholders only; secret scan is clean | T006 | Spec: local/Vercel configuration and non-goals |
+| T007 |  | Add split-deployment runtime config and Auth0 operator instructions (superseded by T009) | Historical task completed before the owner changed deployment | T006 | Original deployment scope |
 | T008 |  | Run full verification and update SDD evidence | `npm test` and `npm run test:e2e` pass; `git diff --check` is clean | T007 | All acceptance criteria |
+| T009 |  | Unify frontend and Socket.IO deployment | `APP_URL` derives all public origins; obsolete Vercel artifacts are absent; full verification passes | T008 | Owner deployment amendment |
 
 ### Task interfaces
 
@@ -186,6 +194,6 @@ one security contract.
 | Dimension | Forecast | Why |
 | --- | --- | --- |
 | Estimated changed lines | 500-800 | Security middleware, browser state, fixtures, tests and docs. |
-| Files / areas | 10-15 | Server, auth modules, HTML/client, Vercel config, three test levels and docs. |
+| Files / areas | 10-15 | Server, auth modules, HTML/client, unified deployment config, three test levels and docs. |
 | Review risk | high | Identity crosses browser, OAuth, JWT and realtime boundaries. |
 | Suggested delivery | staged commits | Separate SDD, backend auth, browser auth and verification evidence. |

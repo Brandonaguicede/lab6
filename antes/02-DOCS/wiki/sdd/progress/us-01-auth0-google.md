@@ -72,3 +72,13 @@ slug: us-01-auth0-google
 - review: seguridad, corrección y pruebas APPROVE después de corregir logout, callback y reconexión.
 - evidence: `02-DOCS/wiki/sdd/verifications/us-01-auth0-google-2026-10-30.md`.
 - blocker: Auth0/Google y despliegue reales requieren configuración externa.
+
+## T009 — 2026-10-30
+- status: complete-local
+- red: `npm run test:unit` produjo 13 fallos esperados porque la configuración todavía exigía `AUTH0_REDIRECT_URI`, `SOCKET_URL` y `ALLOWED_ORIGINS`.
+- green: 33 unitarias, 14 integración y 16 E2E aprobaron con `APP_URL` como único origen público.
+- triangulation: HTTP local es válido; HTTP no local y URLs con ruta se rechazan.
+- files: `libs/auth0.js`, `.env.example`, pruebas, configuración de despliegue y documentación SDD/Lab 8.
+- decision: Express y Socket.IO comparten un único servicio Node persistente; Vercel y su build estático quedan retirados.
+- blocker: publicación real y smoke test Google requieren dominio HTTPS y valores Auth0 externos.
+- skill resolution: used `plan`, `implement`, `verify`; configuration and tests follow the existing Node/Mocha/Jest/Playwright conventions.

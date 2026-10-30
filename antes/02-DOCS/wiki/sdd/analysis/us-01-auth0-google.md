@@ -41,7 +41,8 @@ GATE: PASS — 0 CRITICAL, 0 HIGH, 0 MEDIUM and 1 LOW finding.
 - TDD tasks precede each implementation task and retain both release gates.
 - Server-verified identity replaces the untrusted payload name.
 - Secrets and real tokens stay outside Git and automated fixtures.
-- Vercel frontend and persistent Socket.IO deployment remain separable.
+- Frontend and Socket.IO share one persistent Node origin; `APP_URL` is exact
+  and HTTPS outside local development.
 
 ## Carrier completeness
 
@@ -54,3 +55,10 @@ task depends on an unstated neighboring contract.
 Proceed to `implement` in the existing `feat/lab8-auth0` branch. Re-run this
 analysis only if `Lab8.docx` introduces a conflicting requirement or the
 implementation changes a documented contract.
+
+## Amendment analysis — 2026-10-30
+
+GATE: PASS. The owner-approved unified deployment changes only the hosting and
+public configuration seam. Auth0 PKCE, JWT validation, trusted identity and all
+acceptance criteria remain unchanged. T009 covers the new configuration and
+removal of obsolete Vercel artifacts.

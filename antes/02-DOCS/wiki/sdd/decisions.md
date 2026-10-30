@@ -13,3 +13,4 @@
 | 2026-10-30 | Permit deterministic test authentication only under `NODE_ENV=test` plus an explicit test flag. | Automated login/logout and Socket.IO tests need no real tenant or token; production must fail closed. |
 | 2026-10-30 | Accept only a root Auth0 callback URL. | Express and the Vercel output serve the SPA at `/`; other paths fail configuration instead of returning 404 after login. |
 | 2026-10-30 | Test production browser branches with an intercepted Auth0 SDK. | It executes the real client contract deterministically while Google remains a separate external smoke test. |
+| 2026-10-30 | Serve the frontend and Socket.IO from one persistent Node service and use `APP_URL` as their canonical origin. | The repository owner no longer wants a Vercel deployment; one origin removes split-deployment and CORS drift while preserving the existing Express and Socket.IO architecture. |
